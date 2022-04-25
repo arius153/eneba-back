@@ -55,5 +55,12 @@ public class JWTFilter extends OncePerRequestFilter {
         }
 
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+
+    }
+
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException  {
+        String path = request.getServletPath();
+        return path.contains("/auth");
     }
 }
