@@ -1,7 +1,5 @@
 package com.eneba.enebaback.entities;
 
-import java.util.Set;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -10,7 +8,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import lombok.AllArgsConstructor;
@@ -19,37 +16,22 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "TOOL")
+@Table(name = "IMAGE")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Tool {
+public class Image {
     @Id
     @Column(name = "ID")
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "TOOL_CATEGORY_ID", nullable = false)
-    private ToolCategory toolCategory;
+    @JoinColumn(name = "TOOL_ID", nullable = false)
+    private Tool tool;
 
-    @ManyToOne
-    @JoinColumn(name = "OWNER_USER_ID", nullable = false)
-    private User user;
-
-    @Column(name = "COMMENT")
-    private String comment;
-
-    @Column(name = "GEO_CORD_X")
-    private String geoCordX;
-
-    @Column(name = "GEO_CORD_Y")
-    private String geoCordY;
-
-    @OneToMany(mappedBy = "tool")
-    private Set<BorrowLog> borrowLogs;
-
-    @OneToMany(mappedBy = "tool")
-    private Set<Image> images;
+    @Lob
+    @Column(name = "TOOL_IMAGE")
+    private byte[] image;
 }

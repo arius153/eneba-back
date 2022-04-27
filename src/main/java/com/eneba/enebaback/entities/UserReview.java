@@ -25,23 +25,23 @@ import lombok.Setter;
 public class UserReview {
     @Id
     @Column(name = "ID")
-    @GeneratedValue(strategy= GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name="REVIEWED_USER_ID", nullable=false)
+    @JoinColumn(name = "REVIEWED_USER_ID", nullable = false)
     private User reviewedUser;
 
     @ManyToOne
-    @JoinColumn(name="REVIEWED_BY_USER_ID", nullable=false)
+    @JoinColumn(name = "REVIEWED_BY_USER_ID", nullable = false)
     private User reviewedByUser;
 
-    @Column(name="RATING")
+    @Column(name = "RATING")
     private int rating;
 
-    @Column(name="COMMENTS")
+    @Column(name = "COMMENTS")
     private String comments;
 
-    @Column(name="REVIEWED_AT")
+    @Column(name = "REVIEWED_AT")
     private LocalDateTime reviewedAt;
 }
