@@ -24,12 +24,12 @@ import lombok.Setter;
 public class ToolCategory {
     @Id
     @Column(name = "ID")
-    @GeneratedValue(strategy= GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     @Column(name = "CATEGORY_NAME")
     private String categoryName;
 
-    @OneToMany(mappedBy="toolCategory")
+    @OneToMany(mappedBy = "toolCategory")
     private Set<Tool> tools;
 }
