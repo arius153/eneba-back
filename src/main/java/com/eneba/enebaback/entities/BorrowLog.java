@@ -25,20 +25,20 @@ import lombok.Setter;
 public class BorrowLog {
     @Id
     @Column(name = "ID")
-    @GeneratedValue(strategy= GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name="TOOL_ID", nullable=false)
+    @JoinColumn(name = "TOOL_ID", nullable = false)
     private Tool tool;
 
     @ManyToOne
-    @JoinColumn(name="BORROWED_BY_USER_ID", nullable=false)
+    @JoinColumn(name = "BORROWED_BY_USER_ID", nullable = false)
     private User user;
 
-    @Column(name="BORROWED_AT")
+    @Column(name = "BORROWED_AT")
     private LocalDateTime borrowedAt;
 
-    @Column(name="RETURNED_AT")
+    @Column(name = "RETURNED_AT")
     private LocalDateTime returnedAt;
 }

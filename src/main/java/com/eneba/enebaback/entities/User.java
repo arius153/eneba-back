@@ -25,7 +25,7 @@ import lombok.Setter;
 public class User {
     @Id
     @Column(name = "ID")
-    @GeneratedValue(strategy= GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     @Column(name = "EMAIL")
@@ -40,15 +40,15 @@ public class User {
     @Column(name = "SURNAME")
     private String surname;
 
-    @OneToMany(mappedBy="user")
+    @OneToMany(mappedBy = "user")
     private Set<Tool> tools;
 
-    @OneToMany(mappedBy="user")
+    @OneToMany(mappedBy = "user")
     private Set<BorrowLog> borrowLogs;
 
-    @OneToMany(mappedBy="reviewedUser")
+    @OneToMany(mappedBy = "reviewedUser")
     private Set<UserReview> reviewedUsers;
 
-    @OneToMany(mappedBy="reviewedByUser")
+    @OneToMany(mappedBy = "reviewedByUser")
     private Set<UserReview> reviewedByUsers;
 }
