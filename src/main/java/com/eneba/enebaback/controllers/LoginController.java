@@ -1,5 +1,6 @@
 package com.eneba.enebaback.controllers;
 
+import com.eneba.enebaback.dto.UserRegisterDTO;
 import com.eneba.enebaback.dto.jwt.JwtRequest;
 import com.eneba.enebaback.dto.jwt.JwtResponse;
 import com.eneba.enebaback.services.UserServiceImpl;
@@ -40,6 +41,11 @@ public class LoginController {
         final String token = jwtUtil.generateToken(userDetails);
 
         return new JwtResponse(token);
+    }
+
+    @PostMapping("/register")
+    public Long register(@RequestBody UserRegisterDTO userRegisterDTO) {
+        return userService.RegisterUser(userRegisterDTO).getId();
     }
 
 }
