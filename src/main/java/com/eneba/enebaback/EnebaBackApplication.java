@@ -10,7 +10,7 @@ import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 //TODO remove exclude setting once db is set up
-@SpringBootApplication(exclude = {DataSourceAutoConfiguration.class })
+@SpringBootApplication
 public class EnebaBackApplication {
 
     public static void main(String[] args) {

@@ -1,6 +1,7 @@
 package com.eneba.enebaback.services;
 
 import com.eneba.enebaback.dto.BorrowToolDTO;
+import com.eneba.enebaback.dto.CategoryDTO;
 import com.eneba.enebaback.dto.ReturnToolDTO;
 import com.eneba.enebaback.dto.ToolRegisterDTO;
 import com.eneba.enebaback.entities.BorrowLog;
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 //TODO INSTEAD OF ORELSE(NULL) ADD EXCEPTION THROWING
 @Service
@@ -64,6 +66,13 @@ public class ToolServiceImpl {
 
     public List<Tool> getAllAvailableToolsByCategory(Long categoryId) {
         return toolRepository.findAllAvailableToolsByCategory(categoryId);
+    }
+
+    public List<CategoryDTO> getAllAvailableCategories() {
+        return toolCategoryRepository.findAll()
+                .stream()
+                .map(categorie -> new CategoryDTO(categorie.getId(), categorie.getCategoryName()))
+                .collect(Collectors.toList());
     }
 
     private boolean isToolAvailable(Long toolId) {
