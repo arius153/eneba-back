@@ -30,6 +30,9 @@ public class Tool {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    @Column(name = "name")
+    private String name;
+
     @ManyToOne
     @JoinColumn(name = "TOOL_CATEGORY_ID", nullable = false)
     private ToolCategory toolCategory;
@@ -38,8 +41,8 @@ public class Tool {
     @JoinColumn(name = "OWNER_USER_ID", nullable = false)
     private User user;
 
-    @Column(name = "COMMENT")
-    private String comment;
+    @Column(name = "description")
+    private String description;
 
     @Column(name = "GEO_CORD_X")
     private String geoCordX;
@@ -52,4 +55,10 @@ public class Tool {
 
     @OneToMany(mappedBy = "tool")
     private Set<Image> images;
+
+    @Column(name = "price")
+    private Double price;
+
+    @Column(name = "available")
+    private boolean available;
 }
