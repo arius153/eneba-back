@@ -1,13 +1,12 @@
 package com.eneba.enebaback.dto;
 
-import com.eneba.enebaback.entities.BorrowLog;
-import com.eneba.enebaback.entities.Image;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-import javax.persistence.Column;
-import javax.persistence.OneToMany;
 import java.util.List;
-import java.util.Set;
 
 @Data
 @AllArgsConstructor
@@ -16,16 +15,16 @@ import java.util.Set;
 @Setter
 public class ToolRegisterDTO {
 
-    private Long ownerUserId;
-
-    private Long toolCategoryId;
-
-    private String comment;
-
-    private String geoCordX;
-
-    private String geoCordY;
-
-    private List<byte []> images;
+    private String name;
+    private Long category;
+    private Float price;
+    private String assistedTransportation;
+    private String description;
+    private String address;
+    private Double lat;
+    private Double lng;
+    private List<Integer> daysAvailable;
+    private String pickUpTimeWeekend;
+    private String pickUpTimeWorkDay;
 
 }

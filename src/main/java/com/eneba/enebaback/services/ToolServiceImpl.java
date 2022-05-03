@@ -6,9 +6,13 @@ import com.eneba.enebaback.dto.ReturnToolDTO;
 import com.eneba.enebaback.dto.ToolRegisterDTO;
 import com.eneba.enebaback.entities.BorrowLog;
 import com.eneba.enebaback.entities.Tool;
-import com.eneba.enebaback.repositories.*;
+import com.eneba.enebaback.repositories.BorrowLogRepository;
+import com.eneba.enebaback.repositories.ToolCategoryRepository;
+import com.eneba.enebaback.repositories.ToolRepository;
+import com.eneba.enebaback.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -32,15 +36,16 @@ public class ToolServiceImpl {
     @Autowired
     private ToolCategoryRepository toolCategoryRepository;
 
-    public Tool registerTool(ToolRegisterDTO toolRegisterDTO) {
+    public Tool registerTool(ToolRegisterDTO toolRegisterDTO, List<MultipartFile> files) {
+
         Tool tool = new Tool();
-        tool.setComment(toolRegisterDTO.getComment());
-        tool.setGeoCordX(toolRegisterDTO.getGeoCordX());
-        tool.setGeoCordY(toolRegisterDTO.getGeoCordY());
-        tool.setUser(userRepository.findById(toolRegisterDTO.getOwnerUserId()).orElse(null));
-        tool.setToolCategory(toolCategoryRepository.findById(toolRegisterDTO.getToolCategoryId()).orElse(null));
-        tool = toolRepository.save(tool);
-        imageService.saveAllImages(tool, toolRegisterDTO.getImages());
+//        tool.setComment(toolRegisterDTO.getComment());
+//        tool.setGeoCordX(toolRegisterDTO.getGeoCordX());
+//        tool.setGeoCordY(toolRegisterDTO.getGeoCordY());
+//        tool.setUser(userRepository.findById(toolRegisterDTO.getOwnerUserId()).orElse(null));
+//        tool.setToolCategory(toolCategoryRepository.findById(toolRegisterDTO.getToolCategoryId()).orElse(null));
+//        tool = toolRepository.save(tool);
+//        imageService.saveAllImages(tool, toolRegisterDTO.getImages());
         return tool;
     }
 
