@@ -1,11 +1,16 @@
 package com.eneba.enebaback.dto;
 
 import com.eneba.enebaback.entities.*;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
+@Builder
+@AllArgsConstructor
 public class ToolDTO {
 
     private Long id;
