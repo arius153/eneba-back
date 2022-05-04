@@ -7,4 +7,7 @@ import com.eneba.enebaback.entities.User;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
+
+    public User findByEmail(String email);
+
 }
