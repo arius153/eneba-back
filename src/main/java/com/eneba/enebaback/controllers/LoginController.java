@@ -1,5 +1,6 @@
 package com.eneba.enebaback.controllers;
 
+import com.eneba.enebaback.dto.CustomUser;
 import com.eneba.enebaback.dto.UserRegisterDTO;
 import com.eneba.enebaback.dto.jwt.JwtRequest;
 import com.eneba.enebaback.dto.jwt.JwtResponse;
@@ -36,7 +37,7 @@ public class LoginController {
             throw new Exception("Bad credentials", e);
         }
 
-        final UserDetails userDetails = userService.loadUserByUsername(jwtRequest.getEmail());
+        final CustomUser userDetails = userService.loadUserByUsername(jwtRequest.getEmail());
 
         final String token = jwtUtil.generateToken(userDetails);
 

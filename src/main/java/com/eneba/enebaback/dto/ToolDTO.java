@@ -21,11 +21,11 @@ public class ToolDTO {
 
     private String description;
 
-    private String geoCordX;
+    private Double geoCordX;
 
-    private String geoCordY;
+    private Double geoCordY;
 
-    private Double price;
+    private Float price;
 
     private Boolean available;
 

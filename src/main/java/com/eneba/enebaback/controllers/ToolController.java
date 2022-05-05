@@ -1,22 +1,36 @@
 package com.eneba.enebaback.controllers;
 
-import java.util.List;
-
+import com.eneba.enebaback.dto.CategoryDTO;
+import com.eneba.enebaback.dto.ToolDTO;
+import com.eneba.enebaback.dto.ToolRegisterDTO;
+import com.eneba.enebaback.services.impl.ToolServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
-import com.eneba.enebaback.dto.ToolDTO;
-import com.eneba.enebaback.services.ToolService;
+import java.util.List;
 
 @RestController
 @RequestMapping("/tool")
 public class ToolController {
+
     @Autowired
-    private ToolService toolService;
+    ToolServiceImpl toolService;
+
+    @GetMapping("/categories")
+    public List<CategoryDTO> getAvailableCategories() {
+        return toolService.getAllAvailableCategories();
+    }
+
+    @PostMapping
+    public Long addTool(@RequestPart("data") ToolRegisterDTO toolRegisterDTO, @RequestPart(value = "files", required = false) List<MultipartFile> files) {
+        return toolService.registerTool(toolRegisterDTO, files);
+    }
 
     @GetMapping("/all")
     public List<ToolDTO> getAllTools() {

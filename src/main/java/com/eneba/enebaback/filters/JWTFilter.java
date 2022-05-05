@@ -1,5 +1,6 @@
 package com.eneba.enebaback.filters;
 
+import com.eneba.enebaback.dto.CustomUser;
 import com.eneba.enebaback.services.UserServiceImpl;
 import com.eneba.enebaback.utils.JWTUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +38,7 @@ public class JWTFilter extends OncePerRequestFilter {
         }
 
         if(null != email && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails userDetails = userService.loadUserByUsername(email);
+            CustomUser userDetails = userService.loadUserByUsername(email);
 
             if(jwtUtil.validateToken(token, userDetails)) {
                 UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken

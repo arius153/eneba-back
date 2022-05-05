@@ -21,7 +21,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ToolCategory {
+public class  ToolCategory {
     @Id
     @Column(name = "ID")
     @GeneratedValue(strategy = GenerationType.AUTO)

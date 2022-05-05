@@ -1,19 +1,22 @@
 package com.eneba.enebaback.entities;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -24,6 +27,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Tool {
     @Id
     @Column(name = "ID")
@@ -45,10 +49,13 @@ public class Tool {
     private String description;
 
     @Column(name = "GEO_CORD_X")
-    private String geoCordX;
+    private Double geoCordX;
 
     @Column(name = "GEO_CORD_Y")
-    private String geoCordY;
+    private Double geoCordY;
+
+    @Column(name = "FORMATED_ADDRESS")
+    private String formattedAddress;
 
     @OneToMany(mappedBy = "tool")
     private Set<BorrowLog> borrowLogs;
@@ -57,8 +64,17 @@ public class Tool {
     private Set<Image> images;
 
     @Column(name = "price")
-    private Double price;
+    private Float price;
 
     @Column(name = "available")
     private boolean available;
+
+    @Column(name = "PICK_UP_TIME_WEEKEND")
+    private String pickUpTimeWeekend;
+
+    @Column(name = "PICK_UP_TIME_WORK_DAY")
+    private String pickUpTimeWorkDay;
+
+    @ElementCollection
+    private List<Integer> availableDays = new ArrayList<>();
 }
