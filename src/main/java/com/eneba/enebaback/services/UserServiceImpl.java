@@ -52,7 +52,7 @@ public class UserServiceImpl implements UserDetailsService {
         return null;
     }
 
-    public User getUserById() {
+    public User getLoggedUserEntity() {
         Long loggedUserID = getLoggedUserId();
         if (loggedUserID == null) {
             return null;
