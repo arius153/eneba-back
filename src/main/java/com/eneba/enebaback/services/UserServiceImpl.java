@@ -51,4 +51,16 @@ public class UserServiceImpl implements UserDetailsService {
         }
         return null;
     }
+
+    public User getLoggedUserEntity() {
+        Long loggedUserID = getLoggedUserId();
+        if (loggedUserID == null) {
+            return null;
+        }
+        return userRepository.findById(loggedUserID).orElse(null);
+    }
+
+    public User getLoggedUserEntity(Long id) {
+        return userRepository.findById(id).orElse(null);
+    }
 }
