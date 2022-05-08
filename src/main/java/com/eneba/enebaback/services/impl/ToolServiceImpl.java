@@ -1,5 +1,6 @@
 package com.eneba.enebaback.services.impl;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -9,7 +10,11 @@ import com.eneba.enebaback.repositories.BorrowLogRepository;
 import com.eneba.enebaback.repositories.UserRepository;
 import com.eneba.enebaback.services.ImageServiceImpl;
 import com.eneba.enebaback.services.UserServiceImpl;
+import com.eneba.enebaback.utils.ToolSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import com.eneba.enebaback.entities.Tool;
@@ -59,6 +64,34 @@ public class ToolServiceImpl implements ToolService {
                 .geoCordX(tool.getGeoCordX())
                 .geoCordY(tool.getGeoCordY())
                 .build();
+    }
+
+    @Override
+    public List<ToolDTO> getSortedAndFilteredTools(ToolSortModel toolSortModel, ToolFilterModel toolFilterModel) {
+        if (!toolSortModel.isEmpty() && toolFilterModel.isEmpty()) {
+            return toolRepository
+                    .findAll(Sort.by(toolSortModel.getSortDirection(), toolSortModel.getSortBy()))
+                    .stream()
+                    .map(ToolDTO::new)
+                    .collect(Collectors.toList());
+        }
+
+        ToolSpecification toolSpecification = new ToolSpecification(toolFilterModel);
+
+        if (toolSortModel.isEmpty() && !toolFilterModel.isEmpty()) {
+            return toolRepository
+                    .findAll(toolSpecification)
+                    .stream()
+                    .map(ToolDTO::new)
+                    .collect(Collectors.toList());
+        }
+
+
+        return toolRepository
+                .findAll(toolSpecification, Sort.by(toolSortModel.getSortDirection(), toolSortModel.getSortBy()))
+                .stream()
+                .map(ToolDTO::new)
+                .collect(Collectors.toList());
     }
 
     @Transactional
