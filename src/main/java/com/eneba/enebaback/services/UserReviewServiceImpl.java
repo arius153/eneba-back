@@ -37,8 +37,8 @@ public class UserReviewServiceImpl {
                 .comments(rateUserRequestDTO.getComment())
                 .rating(rateUserRequestDTO.getRating())
                 .reviewedAt(LocalDateTime.now())
-                .reviewedByUser(userService.getLoggedUserEntity())
-                .reviewedUser(userService.getLoggedUserEntity(rateUserRequestDTO.getUserToRateId()))
+                .reviewedByUser(userService.getUserById())
+                .reviewedUser(userService.getUserById(rateUserRequestDTO.getUserToRateId()))
                 .build();
         return userReviewRepository.save(userReview).getId();
     }

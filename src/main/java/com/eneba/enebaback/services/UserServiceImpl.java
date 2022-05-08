@@ -52,7 +52,7 @@ public class UserServiceImpl implements UserDetailsService {
         return null;
     }
 
-    public User getLoggedUserEntity() {
+    public User getUserById() {
         Long loggedUserID = getLoggedUserId();
         if (loggedUserID == null) {
             return null;
@@ -60,7 +60,7 @@ public class UserServiceImpl implements UserDetailsService {
         return userRepository.findById(loggedUserID).orElse(null);
     }
 
-    public User getLoggedUserEntity(Long id) {
+    public User getUserById(Long id) {
         return userRepository.findById(id).orElse(null);
     }
 }
