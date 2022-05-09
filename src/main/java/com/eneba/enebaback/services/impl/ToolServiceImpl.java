@@ -1,26 +1,33 @@
 package com.eneba.enebaback.services.impl;
 
+import java.util.Base64;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.eneba.enebaback.dto.*;
-import com.eneba.enebaback.entities.BorrowLog;
-import com.eneba.enebaback.repositories.BorrowLogRepository;
-import com.eneba.enebaback.repositories.UserRepository;
-import com.eneba.enebaback.services.ImageServiceImpl;
-import com.eneba.enebaback.services.UserServiceImpl;
-import com.eneba.enebaback.utils.ToolSpecification;
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-
-import com.eneba.enebaback.entities.Tool;
-import com.eneba.enebaback.repositories.ToolCategoryRepository;
-import com.eneba.enebaback.repositories.ToolRepository;
-import com.eneba.enebaback.services.ToolService;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.transaction.Transactional;
+import com.eneba.enebaback.dto.BorrowToolDTO;
+import com.eneba.enebaback.dto.CategoryDTO;
+import com.eneba.enebaback.dto.ReturnToolDTO;
+import com.eneba.enebaback.dto.ToolDTO;
+import com.eneba.enebaback.dto.ToolFilterModel;
+import com.eneba.enebaback.dto.ToolRegisterDTO;
+import com.eneba.enebaback.dto.ToolSortModel;
+import com.eneba.enebaback.entities.BorrowLog;
+import com.eneba.enebaback.entities.Tool;
+import com.eneba.enebaback.repositories.BorrowLogRepository;
+import com.eneba.enebaback.repositories.ToolCategoryRepository;
+import com.eneba.enebaback.repositories.ToolRepository;
+import com.eneba.enebaback.repositories.UserRepository;
+import com.eneba.enebaback.services.ImageServiceImpl;
+import com.eneba.enebaback.services.ToolService;
+import com.eneba.enebaback.services.UserServiceImpl;
+import com.eneba.enebaback.utils.ToolSpecification;
 
 @Service
 public class ToolServiceImpl implements ToolService {
@@ -52,14 +59,22 @@ public class ToolServiceImpl implements ToolService {
     }
 
     @Override
+    @Transactional
     public ToolDTO getTool(Long id) {
         Tool tool = toolRepository.getById(id);
 
         return ToolDTO.builder()
                 .description(tool.getDescription())
-                .toolCategory(toolCategoryRepository.getById(id).getCategoryName())
+                .toolCategory(tool.getToolCategory().getCategoryName())
                 .geoCordX(tool.getGeoCordX())
                 .geoCordY(tool.getGeoCordY())
+                .name(tool.getName())
+                .price(tool.getPrice())
+                .assistedTransportation(tool.getAssistedTransportation())
+                .images(tool.getImages().stream().map(x -> Base64.getEncoder().encodeToString(x.getImage())).collect(Collectors.toList()))
+                .formattedAddress(tool.getFormattedAddress())
+                .pickUpTimeWorkDay(tool.getPickUpTimeWorkDay())
+                .pickUpTimeWeekend(tool.getPickUpTimeWeekend())
                 .build();
     }
 
@@ -82,7 +97,6 @@ public class ToolServiceImpl implements ToolService {
                     .map(ToolDTO::new)
                     .collect(Collectors.toList());
         }
-
 
         return toolRepository
                 .findAll(toolSpecification, Sort.by(toolSortModel.getSortDirection(), toolSortModel.getSortBy()))
