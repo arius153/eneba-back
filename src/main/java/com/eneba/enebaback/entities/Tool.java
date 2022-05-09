@@ -7,6 +7,7 @@ import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -60,7 +61,7 @@ public class Tool {
     @OneToMany(mappedBy = "tool")
     private Set<BorrowLog> borrowLogs;
 
-    @OneToMany(mappedBy = "tool")
+    @OneToMany(mappedBy = "tool", fetch = FetchType.LAZY)
     private Set<Image> images;
 
     @Column(name = "price")
@@ -68,6 +69,9 @@ public class Tool {
 
     @Column(name = "available")
     private boolean available;
+
+    @Column(name = "ASSISTED_TRANSPORTATION")
+    private String assistedTransportation;
 
     @Column(name = "PICK_UP_TIME_WEEKEND")
     private String pickUpTimeWeekend;

@@ -1,5 +1,7 @@
 package com.eneba.enebaback.dto;
 
+import java.util.List;
+
 import com.eneba.enebaback.entities.*;
 
 import lombok.AllArgsConstructor;
@@ -30,6 +32,12 @@ public class ToolDTO {
     private Boolean available;
 
     private String name;
+
+    private String assistedTransportation;
+
+    private List<String> images;
+
+    private String formattedAddress;
 
     public ToolDTO(Tool tool) {
         this.id = tool.getId();
