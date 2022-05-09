@@ -1,6 +1,8 @@
 package com.eneba.enebaback.controllers;
 
 import com.eneba.enebaback.dto.RateUserRequestDTO;
+import com.eneba.enebaback.dto.UserReviewAnswerRequestDTO;
+import com.eneba.enebaback.dto.UserReviewAnswerResponseDTO;
 import com.eneba.enebaback.dto.UserReviewDTO;
 import com.eneba.enebaback.services.UserReviewServiceImpl;
 import com.eneba.enebaback.services.UserServiceImpl;
@@ -27,6 +29,11 @@ public class UserReviewController {
     @PostMapping("/rate")
     private Long rateUser(@RequestBody RateUserRequestDTO rateUserRequestDTO) {
         return this.userReviewService.rateUser(rateUserRequestDTO);
+    }
+
+    @PostMapping("/answer")
+    private UserReviewAnswerResponseDTO answerToReview(@RequestBody UserReviewAnswerRequestDTO userReviewAnswerRequestDto) {
+        return this.userReviewService.answerToReview(userReviewAnswerRequestDto);
     }
 
 }
