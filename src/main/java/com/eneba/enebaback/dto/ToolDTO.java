@@ -39,6 +39,10 @@ public class ToolDTO {
 
     private String formattedAddress;
 
+    private String pickUpTimeWorkDay;
+
+    private String pickUpTimeWeekend;
+
     public ToolDTO(Tool tool) {
         this.id = tool.getId();
         this.toolCategory = tool.getToolCategory().getCategoryName();

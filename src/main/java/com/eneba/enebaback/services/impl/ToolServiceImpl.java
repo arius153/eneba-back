@@ -73,6 +73,8 @@ public class ToolServiceImpl implements ToolService {
                 .assistedTransportation(tool.getAssistedTransportation())
                 .images(tool.getImages().stream().map(x -> Base64.getEncoder().encodeToString(x.getImage())).collect(Collectors.toList()))
                 .formattedAddress(tool.getFormattedAddress())
+                .pickUpTimeWorkDay(tool.getPickUpTimeWorkDay())
+                .pickUpTimeWeekend(tool.getPickUpTimeWeekend())
                 .build();
     }
 
