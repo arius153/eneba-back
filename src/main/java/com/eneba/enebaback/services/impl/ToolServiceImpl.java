@@ -20,6 +20,7 @@ import com.eneba.enebaback.dto.ToolRegisterDTO;
 import com.eneba.enebaback.dto.ToolSortModel;
 import com.eneba.enebaback.entities.BorrowLog;
 import com.eneba.enebaback.entities.Tool;
+import com.eneba.enebaback.entities.User;
 import com.eneba.enebaback.repositories.BorrowLogRepository;
 import com.eneba.enebaback.repositories.ToolCategoryRepository;
 import com.eneba.enebaback.repositories.ToolRepository;
@@ -162,5 +163,20 @@ public class ToolServiceImpl implements ToolService {
 
     private boolean isToolAvailable(Long toolId) {
         return toolRepository.findAvailableToolById(toolId) != null;
+    }
+
+    public List<BorrowToolDTO> getBorrowedToolLog() {
+        User user = userService.getLoggedUserEntity();
+        List<BorrowLog> borrowLog = borrowLogRepository.findByUser(user);
+
+        return borrowLog.stream().map(log -> BorrowToolDTO.builder()
+                .ownerName(log.getUser().getName())
+                .ownerLastName(log.getUser().getSurname())
+                .borrowedAt(log.getBorrowedAt())
+                .returnedAt(log.getReturnedAt())
+                .toolPrice(log.getTool().getPrice())
+                .ownerAddress(log.getTool().getFormattedAddress())
+                .ownerGeoCordX(log.getTool().getGeoCordX())
+                .ownerGeoCordY(log.getTool().getGeoCordY()).build()).collect(Collectors.toList());
     }
 }
