@@ -167,6 +167,9 @@ public class ToolServiceImpl implements ToolService {
 
     public List<BorrowToolDTO> getBorrowedToolLog() {
         User user = userService.getLoggedUserEntity();
+        if (user == null) {
+            return null;
+        }
         List<BorrowLog> borrowLog = borrowLogRepository.findByUser(user);
 
         return borrowLog.stream().map(log -> BorrowToolDTO.builder()
@@ -174,9 +177,9 @@ public class ToolServiceImpl implements ToolService {
                 .ownerLastName(log.getUser().getSurname())
                 .borrowedAt(log.getBorrowedAt())
                 .returnedAt(log.getReturnedAt())
-                .toolPrice(log.getTool().getPrice())
-                .ownerAddress(log.getTool().getFormattedAddress())
-                .ownerGeoCordX(log.getTool().getGeoCordX())
-                .ownerGeoCordY(log.getTool().getGeoCordY()).build()).collect(Collectors.toList());
+                .toolPrice(log.getTool() == null ? null : log.getTool().getPrice())
+                .ownerAddress(log.getTool() == null ? null : log.getTool().getFormattedAddress())
+                .ownerGeoCordX(log.getTool() == null ? null : log.getTool().getGeoCordX())
+                .ownerGeoCordY(log.getTool() == null ? null : log.getTool().getGeoCordY()).build()).collect(Collectors.toList());
     }
 }
