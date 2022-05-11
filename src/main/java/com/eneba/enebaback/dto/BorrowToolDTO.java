@@ -1,19 +1,20 @@
 package com.eneba.enebaback.dto;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 public class BorrowToolDTO {
+
+    private String toolName;
 
     private Long toolId;
 
@@ -27,11 +28,17 @@ public class BorrowToolDTO {
 
     private LocalDateTime returnedAt;
 
+    private LocalDate borrowedAtDate;
+
+    private LocalDate returnedAtDate;
+
     private Float toolPrice;
 
-    private String ownerAddress;
+    private String toolPlace;
 
     private Double ownerGeoCordX;
 
     private Double ownerGeoCordY;
+
+    private Float pricePaid;
 }

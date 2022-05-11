@@ -1,5 +1,6 @@
 package com.eneba.enebaback.services.impl;
 
+import java.time.temporal.ChronoUnit;
 import java.util.Base64;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -175,10 +176,12 @@ public class ToolServiceImpl implements ToolService {
         return borrowLog.stream().map(log -> BorrowToolDTO.builder()
                 .ownerName(log.getUser().getName())
                 .ownerLastName(log.getUser().getSurname())
-                .borrowedAt(log.getBorrowedAt())
-                .returnedAt(log.getReturnedAt())
+                .borrowedAtDate(log.getBorrowedAt().toLocalDate())
+                .returnedAtDate(log.getReturnedAt().toLocalDate())
+                .toolName(log.getTool() == null ? null : log.getTool().getName())
                 .toolPrice(log.getTool() == null ? null : log.getTool().getPrice())
-                .ownerAddress(log.getTool() == null ? null : log.getTool().getFormattedAddress())
+                .pricePaid(log.getTool() == null ? null : log.getTool().getPrice() * (ChronoUnit.DAYS.between(log.getBorrowedAt().toLocalDate(), log.getReturnedAt().toLocalDate())))
+                .toolPlace(log.getTool() == null ? null : log.getTool().getFormattedAddress())
                 .ownerGeoCordX(log.getTool() == null ? null : log.getTool().getGeoCordX())
                 .ownerGeoCordY(log.getTool() == null ? null : log.getTool().getGeoCordY()).build()).collect(Collectors.toList());
     }
