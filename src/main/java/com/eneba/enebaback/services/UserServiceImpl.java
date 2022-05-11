@@ -1,5 +1,6 @@
 package com.eneba.enebaback.services;
 
+import com.eneba.enebaback.EnebaBackApplication;
 import com.eneba.enebaback.dto.CustomUser;
 import com.eneba.enebaback.dto.UserRegisterDTO;
 import com.eneba.enebaback.entities.User;
@@ -13,6 +14,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.Optional;
 
@@ -23,7 +25,7 @@ public class UserServiceImpl implements UserDetailsService {
     private UserRepository userRepository;
 
     @Autowired
-    PasswordEncoder bCryptPasswordEncoder;
+    private PasswordEncoder bCryptPasswordEncoder;
 
     @Override
     public CustomUser loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -62,5 +64,30 @@ public class UserServiceImpl implements UserDetailsService {
 
     public User getUserById(Long id) {
         return userRepository.findById(id).orElse(null);
+    }
+
+    @Transactional
+    public String updatePassword(String newPassword) {
+        User user = getLoggedUserEntity();
+        if (user == null) {
+            return "";
+        }
+
+        String hashedPassword = bCryptPasswordEncoder.encode(newPassword);
+        user.setPassword(hashedPassword);
+        return userRepository.save(user).getPassword();
+    }
+
+    @Transactional
+    public String updatePhoneNumber(String newPhoneNumber) {
+        User user = getLoggedUserEntity();
+        if (user == null) {
+            return "";
+        }
+
+        //String hashedPassword = bCryptPasswordEncoder.encode(newPassword);
+        //user.setPhoneNumber(newPhoneNumber);
+        //return userRepository.save(user).getPhoneNumber();
+        return newPhoneNumber;
     }
 }
