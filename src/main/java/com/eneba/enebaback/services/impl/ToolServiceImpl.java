@@ -9,6 +9,7 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.eneba.enebaback.dto.BorrowToolDTO;
@@ -125,8 +126,10 @@ public class ToolServiceImpl implements ToolService {
                 .pickUpTimeWorkDay(toolRegisterDTO.getPickUpTimeWorkDay())
                 .availableDays(toolRegisterDTO.getDaysAvailable())
                 .build();
-        tool = toolRepository.save(tool);
-        imageService.saveAllImages(tool, files);
+        tool = toolRepository.saveAndFlush(tool);
+        if (!CollectionUtils.isEmpty(files)) {
+            imageService.saveAllImages(tool, files);
+        }
         return tool.getId();
     }
 
