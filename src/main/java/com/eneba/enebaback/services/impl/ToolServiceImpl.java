@@ -1,25 +1,20 @@
 package com.eneba.enebaback.services.impl;
 
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
+import com.eneba.enebaback.dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.eneba.enebaback.dto.BorrowToolDTO;
-import com.eneba.enebaback.dto.CategoryDTO;
-import com.eneba.enebaback.dto.ReturnToolDTO;
-import com.eneba.enebaback.dto.ToolDTO;
-import com.eneba.enebaback.dto.ToolFilterModel;
-import com.eneba.enebaback.dto.ToolRegisterDTO;
-import com.eneba.enebaback.dto.ToolSortModel;
 import com.eneba.enebaback.entities.BorrowLog;
 import com.eneba.enebaback.entities.Tool;
 import com.eneba.enebaback.entities.User;
@@ -134,14 +129,13 @@ public class ToolServiceImpl implements ToolService {
         return tool.getId();
     }
 
-    public BorrowLog borrowTool(BorrowToolDTO borrowToolDTO) {
+    public Long borrowTool(BorrowingDTO borrowingDTO) {
         BorrowLog borrowLog = new BorrowLog();
-        borrowLog.setTool(toolRepository.findById(borrowToolDTO.getToolId()).orElse(null));
-        borrowLog.setUser(userRepository.findById(borrowToolDTO.getBorrowedByUserId()).orElse(null));
-        borrowLog.setBorrowedAt(borrowToolDTO.getBorrowedAt());
-        borrowLog.setReturnedAt(null);
-        borrowLogRepository.save(borrowLog);
-        return borrowLog;
+        borrowLog.setTool(toolRepository.findById(borrowingDTO.getToolId()).orElse(null));
+        borrowLog.setUser(userService.getLoggedUserEntity());
+        borrowLog.setBorrowedAt(borrowingDTO.getBorrowedAt());
+        borrowLog.setReturnedAt(borrowingDTO.getReturnedAt());
+        return borrowLogRepository.save(borrowLog).getId();
     }
 
     public BorrowLog returnTool(ReturnToolDTO returnToolDTO) {
@@ -187,5 +181,14 @@ public class ToolServiceImpl implements ToolService {
                 .toolPlace(log.getTool() == null ? null : log.getTool().getFormattedAddress())
                 .ownerGeoCordX(log.getTool() == null ? null : log.getTool().getGeoCordX())
                 .ownerGeoCordY(log.getTool() == null ? null : log.getTool().getGeoCordY()).build()).collect(Collectors.toList());
+    }
+
+    public List<ToolUnavailableTimeslotDTO> getToolUnavailableTimeslots(Long toolId) {
+        List<BorrowLog> borrowLogs = borrowLogRepository.findFutureBorrows(toolId);
+        List<ToolUnavailableTimeslotDTO> toolUnavailableTimeslotDTOS = new ArrayList<>();
+        for(BorrowLog borrowLog : borrowLogs) {
+            toolUnavailableTimeslotDTOS.add(new ToolUnavailableTimeslotDTO(borrowLog));
+        }
+        return toolUnavailableTimeslotDTOS;
     }
 }
