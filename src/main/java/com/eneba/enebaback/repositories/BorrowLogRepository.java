@@ -13,6 +13,6 @@ import com.eneba.enebaback.entities.User;
 public interface BorrowLogRepository extends JpaRepository<BorrowLog, Long> {
     List<BorrowLog> findByUser(User user);
 
-    @Query(value = "SELECT * FROM BORROW_LOG AS B WHERE B.TOOL_ID = ?1 AND B.RETURNED_AT <= CURRENT_DATE)", nativeQuery = true)
+    @Query(value = "SELECT * FROM BORROW_LOG AS B WHERE B.TOOL_ID = ?1 AND CURRENT_DATE <= B.RETURNED_AT", nativeQuery = true)
     public List<BorrowLog> findFutureBorrows(Long toolId);
 }

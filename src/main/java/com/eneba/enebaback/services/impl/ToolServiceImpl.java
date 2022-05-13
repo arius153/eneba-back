@@ -129,14 +129,13 @@ public class ToolServiceImpl implements ToolService {
         return tool.getId();
     }
 
-    public BorrowLog borrowTool(BorrowingDTO borrowingDTO) {
+    public Long borrowTool(BorrowingDTO borrowingDTO) {
         BorrowLog borrowLog = new BorrowLog();
         borrowLog.setTool(toolRepository.findById(borrowingDTO.getToolId()).orElse(null));
         borrowLog.setUser(userService.getLoggedUserEntity());
         borrowLog.setBorrowedAt(borrowingDTO.getBorrowedAt());
         borrowLog.setReturnedAt(borrowingDTO.getReturnedAt());
-        borrowLogRepository.save(borrowLog);
-        return borrowLog;
+        return borrowLogRepository.save(borrowLog).getId();
     }
 
     public BorrowLog returnTool(ReturnToolDTO returnToolDTO) {
