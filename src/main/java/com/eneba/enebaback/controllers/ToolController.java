@@ -2,23 +2,12 @@ package com.eneba.enebaback.controllers;
 
 import java.util.List;
 
+import com.eneba.enebaback.dto.*;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.eneba.enebaback.dto.BorrowToolDTO;
-import com.eneba.enebaback.dto.CategoryDTO;
-import com.eneba.enebaback.dto.ToolDTO;
-import com.eneba.enebaback.dto.ToolFilterModel;
-import com.eneba.enebaback.dto.ToolRegisterDTO;
-import com.eneba.enebaback.dto.ToolSortModel;
 import com.eneba.enebaback.services.impl.ToolServiceImpl;
 
 @RestController
@@ -79,5 +68,15 @@ public class ToolController {
     @GetMapping("/history")
     private List<BorrowToolDTO> getBorrowedToolLog() {
         return toolService.getBorrowedToolLog();
+    }
+
+    @PostMapping("/borrow")
+    public void borrowTool(@RequestBody BorrowingDTO borrowingDTO) {
+        toolService.borrowTool(borrowingDTO);
+    }
+
+    @GetMapping("/tool-unavailable-timeslots/{id}")
+    public List<ToolUnavailableTimeslotDTO> getToolUnavailableTimeslots(@PathVariable Long id) {
+        return toolService.getToolUnavailableTimeslots(id);
     }
 }
