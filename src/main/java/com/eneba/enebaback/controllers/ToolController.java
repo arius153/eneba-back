@@ -19,6 +19,7 @@ public class ToolController {
     @Autowired
     ToolServiceImpl toolService;
 
+
     @GetMapping("/categories")
     public List<CategoryDTO> getAvailableCategories() {
         return toolService.getAllAvailableCategories();

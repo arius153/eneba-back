@@ -9,12 +9,20 @@ import java.util.stream.Collectors;
 import javax.transaction.Transactional;
 
 import com.eneba.enebaback.dto.*;
+import com.eneba.enebaback.services.UserReviewServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.eneba.enebaback.dto.BorrowToolDTO;
+import com.eneba.enebaback.dto.CategoryDTO;
+import com.eneba.enebaback.dto.ReturnToolDTO;
+import com.eneba.enebaback.dto.ToolDTO;
+import com.eneba.enebaback.dto.ToolFilterModel;
+import com.eneba.enebaback.dto.ToolRegisterDTO;
+import com.eneba.enebaback.dto.ToolSortModel;
 import com.eneba.enebaback.entities.BorrowLog;
 import com.eneba.enebaback.entities.Tool;
 import com.eneba.enebaback.entities.User;
@@ -48,6 +56,9 @@ public class ToolServiceImpl implements ToolService {
     @Autowired
     private ImageServiceImpl imageService;
 
+    @Autowired
+    private UserReviewServiceImpl userReviewService;
+
     @Override
     public List<ToolDTO> getAllTools() {
         return toolRepository.findAll()
@@ -60,7 +71,8 @@ public class ToolServiceImpl implements ToolService {
     @Transactional
     public ToolDTO getTool(Long id) {
         Tool tool = toolRepository.getById(id);
-
+        SimplifiedUserDTO simplifiedUserDTO = userReviewService.getUserAverage(tool.getUser().getId());
+        simplifiedUserDTO.setFullName(userService.getUserFullName(simplifiedUserDTO.getUserId()));
         return ToolDTO.builder()
                 .description(tool.getDescription())
                 .toolCategory(tool.getToolCategory().getCategoryName())
@@ -73,6 +85,7 @@ public class ToolServiceImpl implements ToolService {
                 .formattedAddress(tool.getFormattedAddress())
                 .pickUpTimeWorkDay(tool.getPickUpTimeWorkDay())
                 .pickUpTimeWeekend(tool.getPickUpTimeWeekend())
+                .simplifiedUserDTO(simplifiedUserDTO)
                 .build();
     }
 

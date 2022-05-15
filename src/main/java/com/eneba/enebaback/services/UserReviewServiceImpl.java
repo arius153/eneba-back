@@ -1,16 +1,13 @@
 package com.eneba.enebaback.services;
 
-import com.eneba.enebaback.dto.RateUserRequestDTO;
-import com.eneba.enebaback.dto.UserReviewAnswerRequestDTO;
-import com.eneba.enebaback.dto.UserReviewAnswerResponseDTO;
-import com.eneba.enebaback.dto.UserReviewDTO;
+import com.eneba.enebaback.dto.*;
 import com.eneba.enebaback.entities.UserReview;
 import com.eneba.enebaback.entities.UserReviewAnswer;
 import com.eneba.enebaback.repositories.UserReviewAnswerRepository;
 import com.eneba.enebaback.repositories.UserReviewRepository;
+import com.eneba.enebaback.utils.MathUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
@@ -49,6 +46,13 @@ public class UserReviewServiceImpl {
                 .reviewedUser(userService.getUserById(rateUserRequestDTO.getUserToRateId()))
                 .build();
         return userReviewRepository.save(userReview).getId();
+    }
+
+    public SimplifiedUserDTO getUserAverage(Long userId) {
+        SimplifiedUserDTO userReviewAverageAndCount = userReviewRepository.getSimplifiedUserReviewsUsingId(userId);
+        userReviewAverageAndCount.setReviewAverage(MathUtils.round(userReviewAverageAndCount.getReviewAverage(), 2));
+        userReviewAverageAndCount.setUserId(userId);
+        return userReviewAverageAndCount;
     }
 
     @Transactional

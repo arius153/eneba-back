@@ -90,4 +90,8 @@ public class UserServiceImpl implements UserDetailsService {
         //return userRepository.save(user).getPhoneNumber();
         return newPhoneNumber;
     }
+
+    public String getUserFullName(Long userId) {
+        return userRepository.getFullNameUsingId(userId);
+    }
 }
