@@ -73,6 +73,7 @@ public class ToolServiceImpl implements ToolService {
                 .formattedAddress(tool.getFormattedAddress())
                 .pickUpTimeWorkDay(tool.getPickUpTimeWorkDay())
                 .pickUpTimeWeekend(tool.getPickUpTimeWeekend())
+                .availableDays(tool.getAvailableDays())
                 .build();
     }
 
