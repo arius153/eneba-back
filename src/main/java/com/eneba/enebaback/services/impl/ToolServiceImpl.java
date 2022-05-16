@@ -1,25 +1,18 @@
 package com.eneba.enebaback.services.impl;
 
 import java.time.temporal.ChronoUnit;
-import java.util.Base64;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
+import com.eneba.enebaback.dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.eneba.enebaback.dto.BorrowToolDTO;
-import com.eneba.enebaback.dto.CategoryDTO;
-import com.eneba.enebaback.dto.ReturnToolDTO;
-import com.eneba.enebaback.dto.ToolDTO;
-import com.eneba.enebaback.dto.ToolFilterModel;
-import com.eneba.enebaback.dto.ToolRegisterDTO;
-import com.eneba.enebaback.dto.ToolSortModel;
 import com.eneba.enebaback.entities.BorrowLog;
 import com.eneba.enebaback.entities.Tool;
 import com.eneba.enebaback.entities.User;
@@ -63,22 +56,23 @@ public class ToolServiceImpl implements ToolService {
 
     @Override
     @Transactional
-    public ToolDTO getTool(Long id) {
+    public ToolDTO getTool(Long id)
+    {
         Tool tool = toolRepository.getById(id);
 
         return ToolDTO.builder()
-                .description(tool.getDescription())
-                .toolCategory(tool.getToolCategory().getCategoryName())
-                .geoCordX(tool.getGeoCordX())
-                .geoCordY(tool.getGeoCordY())
-                .name(tool.getName())
-                .price(tool.getPrice())
-                .assistedTransportation(tool.getAssistedTransportation())
-                .images(tool.getImages().stream().map(x -> Base64.getEncoder().encodeToString(x.getImage())).collect(Collectors.toList()))
-                .formattedAddress(tool.getFormattedAddress())
-                .pickUpTimeWorkDay(tool.getPickUpTimeWorkDay())
-                .pickUpTimeWeekend(tool.getPickUpTimeWeekend())
-                .build();
+            .description(tool.getDescription())
+            .toolCategory(tool.getToolCategory().getCategoryName())
+            .geoCordX(tool.getGeoCordX())
+            .geoCordY(tool.getGeoCordY())
+            .name(tool.getName())
+            .price(tool.getPrice())
+            .assistedTransportation(tool.getAssistedTransportation())
+            .images(tool.getImages().stream().map(x -> Base64.getEncoder().encodeToString(x.getImage())).collect(Collectors.toList()))
+            .formattedAddress(tool.getFormattedAddress())
+            .pickUpTimeWorkDay(tool.getPickUpTimeWorkDay())
+            .pickUpTimeWeekend(tool.getPickUpTimeWeekend())
+            .build();
     }
 
     @Override
@@ -187,5 +181,22 @@ public class ToolServiceImpl implements ToolService {
                 .toolPlace(log.getTool() == null ? null : log.getTool().getFormattedAddress())
                 .ownerGeoCordX(log.getTool() == null ? null : log.getTool().getGeoCordX())
                 .ownerGeoCordY(log.getTool() == null ? null : log.getTool().getGeoCordY()).build()).collect(Collectors.toList());
+    }
+
+    public List<ToolBriefDTO> getUserTools(Long userId) {
+        return toolRepository
+            .findAllUserTools(userId)
+            .stream()
+            .map(ToolBriefDTO::new)
+            .collect(Collectors.toList());
+    }
+
+    public List<ToolBriefDTO> getLoggedUserTools() {
+        Long userId = userService.getLoggedUserId();
+        return toolRepository
+            .findAllUserTools(userId)
+            .stream()
+            .map(ToolBriefDTO::new)
+            .collect(Collectors.toList());
     }
 }

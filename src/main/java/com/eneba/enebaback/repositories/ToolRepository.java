@@ -20,4 +20,7 @@ public interface ToolRepository extends JpaRepository<Tool, Long>, JpaSpecificat
 
     @Query(value = "SELECT * FROM TOOL AS T WHERE T.ID = ?1 AND T.ID NOT IN (SELECT B.TOOL_ID FROM BORROW_LOG AS B WHERE B.RETURNED_AT IS NULL)", nativeQuery = true)
     public Tool findAvailableToolById(Long id);
+
+    @Query(value = "SELECT * FROM TOOL AS T WHERE T.OWNER_USER_ID = ?1", nativeQuery = true)
+    public List<Tool> findAllUserTools(Long userId);
 }

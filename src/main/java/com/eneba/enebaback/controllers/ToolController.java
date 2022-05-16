@@ -1,7 +1,9 @@
 package com.eneba.enebaback.controllers;
 
 import java.util.List;
+import java.util.Timer;
 
+import com.eneba.enebaback.services.UserServiceImpl;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.eneba.enebaback.dto.BorrowToolDTO;
 import com.eneba.enebaback.dto.CategoryDTO;
 import com.eneba.enebaback.dto.ToolDTO;
+import com.eneba.enebaback.dto.ToolBriefDTO;
 import com.eneba.enebaback.dto.ToolFilterModel;
 import com.eneba.enebaback.dto.ToolRegisterDTO;
 import com.eneba.enebaback.dto.ToolSortModel;
@@ -72,12 +75,16 @@ public class ToolController {
     }
 
     @GetMapping("/{id}")
-    private ToolDTO getTool(@PathVariable Long id) {
-        return toolService.getTool(id);
-    }
+    private ToolDTO getTool(@PathVariable Long id) { return toolService.getTool(id); }
 
     @GetMapping("/history")
     private List<BorrowToolDTO> getBorrowedToolLog() {
         return toolService.getBorrowedToolLog();
+    }
+
+    @GetMapping("/my")
+    private List<ToolBriefDTO> getCurrentlyLoggedUserTools() {
+        List<ToolBriefDTO> tools = toolService.getLoggedUserTools();
+        return tools;
     }
 }
