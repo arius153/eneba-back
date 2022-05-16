@@ -43,6 +43,8 @@ public class ToolDTO {
 
     private String pickUpTimeWeekend;
 
+    private List<Integer> availableDays;
+
     private SimplifiedUserDTO simplifiedUserDTO;
 
     public ToolDTO(Tool tool) {
@@ -55,5 +57,6 @@ public class ToolDTO {
         this.price = tool.getPrice();
         this.available = tool.isAvailable();
         this.name = tool.getName();
+        this.availableDays = tool.getAvailableDays();
     }
 }

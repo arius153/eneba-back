@@ -16,13 +16,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.eneba.enebaback.dto.BorrowToolDTO;
-import com.eneba.enebaback.dto.CategoryDTO;
-import com.eneba.enebaback.dto.ReturnToolDTO;
-import com.eneba.enebaback.dto.ToolDTO;
-import com.eneba.enebaback.dto.ToolFilterModel;
-import com.eneba.enebaback.dto.ToolRegisterDTO;
-import com.eneba.enebaback.dto.ToolSortModel;
 import com.eneba.enebaback.entities.BorrowLog;
 import com.eneba.enebaback.entities.Tool;
 import com.eneba.enebaback.entities.User;
@@ -85,6 +78,7 @@ public class ToolServiceImpl implements ToolService {
                 .formattedAddress(tool.getFormattedAddress())
                 .pickUpTimeWorkDay(tool.getPickUpTimeWorkDay())
                 .pickUpTimeWeekend(tool.getPickUpTimeWeekend())
+                .availableDays(tool.getAvailableDays())
                 .simplifiedUserDTO(simplifiedUserDTO)
                 .build();
     }
