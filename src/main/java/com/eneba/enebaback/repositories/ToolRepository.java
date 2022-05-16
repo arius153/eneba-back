@@ -1,5 +1,6 @@
 package com.eneba.enebaback.repositories;
 
+import com.eneba.enebaback.dto.ToolListViewDTO;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
@@ -13,11 +14,14 @@ import java.util.List;
 public interface ToolRepository extends JpaRepository<Tool, Long>, JpaSpecificationExecutor<Tool> {
 
     @Query(value = "SELECT * FROM TOOL AS T WHERE T.ID NOT IN (SELECT B.TOOL_ID FROM BORROW_LOG AS B WHERE B.RETURNED_AT IS NULL)", nativeQuery=true)
-    public List<Tool> findAllAvailableTools();
+    List<Tool> findAllAvailableTools();
 
     @Query(value = "SELECT * FROM TOOL AS T WHERE T.ID NOT IN (SELECT B.TOOL_ID FROM BORROW_LOG AS B WHERE B.RETURNED_AT IS NULL) AND T.TOOL_CATEGORY_ID = ?1", nativeQuery = true)
-    public List<Tool> findAllAvailableToolsByCategory(Long categoryId);
+    List<Tool> findAllAvailableToolsByCategory(Long categoryId);
 
     @Query(value = "SELECT * FROM TOOL AS T WHERE T.ID = ?1 AND T.ID NOT IN (SELECT B.TOOL_ID FROM BORROW_LOG AS B WHERE B.RETURNED_AT IS NULL)", nativeQuery = true)
-    public Tool findAvailableToolById(Long id);
+    Tool findAvailableToolById(Long id);
+
+    @Query(value = "select new com.eneba.enebaback.dto.ToolListViewDTO(id, name, toolCategory.categoryName, price) from Tool where user.id = ?1")
+    List<ToolListViewDTO> findAllToolsByUserId(Long userId);
 }

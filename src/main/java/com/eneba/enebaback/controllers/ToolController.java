@@ -35,6 +35,11 @@ public class ToolController {
         return toolService.getAllTools();
     }
 
+    @GetMapping("/user/{userId}")
+    public List<ToolListViewDTO> getAllToolsByUserId(@PathVariable Long userId) {
+        return toolService.getAllTools(userId);
+    }
+
     @GetMapping("/all")
     public List<ToolDTO> getFilteredAndSortedTools(
             @RequestParam(required = false) String sortBy,

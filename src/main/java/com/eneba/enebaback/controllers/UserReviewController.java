@@ -4,6 +4,7 @@ import com.eneba.enebaback.dto.RateUserRequestDTO;
 import com.eneba.enebaback.dto.UserReviewAnswerRequestDTO;
 import com.eneba.enebaback.dto.UserReviewAnswerResponseDTO;
 import com.eneba.enebaback.dto.UserReviewDTO;
+import com.eneba.enebaback.entities.User;
 import com.eneba.enebaback.services.UserReviewServiceImpl;
 import com.eneba.enebaback.services.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,8 +23,13 @@ public class UserReviewController {
     private UserServiceImpl userService;
 
     @GetMapping
-    public List<UserReviewDTO> getUserReviewsById() {
+    public List<UserReviewDTO> getUserReviews() {
         return userReviewService.getUserReviewsByUserId(userService.getLoggedUserId());
+    }
+
+    @GetMapping("/{userId}")
+    public List<UserReviewDTO> getUserReviewsById(@PathVariable Long userId) {
+        return userReviewService.getUserReviewsByUserId(userId);
     }
 
     @PostMapping("/rate")

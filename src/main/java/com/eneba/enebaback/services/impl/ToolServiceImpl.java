@@ -60,6 +60,11 @@ public class ToolServiceImpl implements ToolService {
                 .collect(Collectors.toList());
     }
 
+    public List<ToolListViewDTO> getAllTools(Long userId) {
+        return toolRepository.findAllToolsByUserId(userId);
+
+    }
+
     @Override
     @Transactional
     public ToolDTO getTool(Long id) {

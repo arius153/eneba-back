@@ -17,6 +17,11 @@ public class UserController
         return new UserDTO(userService.getLoggedUserEntity());
     }
 
+    @GetMapping("/{userId}")
+    public UserDTO getUserDataById(@PathVariable Long userId) {
+        return new UserDTO(userService.getUserById(userId));
+    }
+
     @PatchMapping("/password")
     public void updatePassword(@RequestBody String newPassword) {
         userService.updatePassword(newPassword);
