@@ -41,4 +41,5 @@ public class BorrowLog {
 
     @Column(name = "RETURNED_AT")
     private LocalDateTime returnedAt;
+
 }
