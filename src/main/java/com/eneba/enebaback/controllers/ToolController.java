@@ -19,6 +19,7 @@ public class ToolController {
     @Autowired
     ToolServiceImpl toolService;
 
+
     @GetMapping("/categories")
     public List<CategoryDTO> getAvailableCategories() {
         return toolService.getAllAvailableCategories();
@@ -32,6 +33,11 @@ public class ToolController {
     @GetMapping("/")
     public List<ToolDTO> getAllTools() {
         return toolService.getAllTools();
+    }
+
+    @GetMapping("/user/{userId}")
+    public List<ToolListViewDTO> getAllToolsByUserId(@PathVariable Long userId) {
+        return toolService.getAllTools(userId);
     }
 
     @GetMapping("/all")

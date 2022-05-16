@@ -45,6 +45,8 @@ public class ToolDTO {
 
     private List<Integer> availableDays;
 
+    private SimplifiedUserDTO simplifiedUserDTO;
+
     public ToolDTO(Tool tool) {
         this.id = tool.getId();
         this.toolCategory = tool.getToolCategory().getCategoryName();

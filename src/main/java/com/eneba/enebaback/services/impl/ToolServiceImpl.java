@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 import javax.transaction.Transactional;
 
 import com.eneba.enebaback.dto.*;
+import com.eneba.enebaback.services.UserReviewServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -48,6 +49,9 @@ public class ToolServiceImpl implements ToolService {
     @Autowired
     private ImageServiceImpl imageService;
 
+    @Autowired
+    private UserReviewServiceImpl userReviewService;
+
     @Override
     public List<ToolDTO> getAllTools() {
         return toolRepository.findAll()
@@ -56,11 +60,17 @@ public class ToolServiceImpl implements ToolService {
                 .collect(Collectors.toList());
     }
 
+    public List<ToolListViewDTO> getAllTools(Long userId) {
+        return toolRepository.findAllToolsByUserId(userId);
+
+    }
+
     @Override
     @Transactional
     public ToolDTO getTool(Long id) {
         Tool tool = toolRepository.getById(id);
-
+        SimplifiedUserDTO simplifiedUserDTO = userReviewService.getUserAverage(tool.getUser().getId());
+        simplifiedUserDTO.setFullName(userService.getUserFullName(simplifiedUserDTO.getUserId()));
         return ToolDTO.builder()
                 .description(tool.getDescription())
                 .toolCategory(tool.getToolCategory().getCategoryName())
@@ -74,6 +84,7 @@ public class ToolServiceImpl implements ToolService {
                 .pickUpTimeWorkDay(tool.getPickUpTimeWorkDay())
                 .pickUpTimeWeekend(tool.getPickUpTimeWeekend())
                 .availableDays(tool.getAvailableDays())
+                .simplifiedUserDTO(simplifiedUserDTO)
                 .build();
     }
 
