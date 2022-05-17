@@ -61,7 +61,7 @@ public class ToolServiceImpl implements ToolService {
                 .collect(Collectors.toList());
     }
 
-    public List<ToolListViewDTO> getAllTools(Long userId) {
+    public List<ToolBriefDTO> getAllTools(Long userId) {
         return toolRepository.findAllToolsByUserId(userId);
 
     }
@@ -196,21 +196,9 @@ public class ToolServiceImpl implements ToolService {
                 .ownerGeoCordY(log.getTool() == null ? null : log.getTool().getGeoCordY()).build()).collect(Collectors.toList());
     }
 
-    public List<ToolBriefDTO> getUserTools(Long userId) {
-        return toolRepository
-            .findAllUserTools(userId)
-            .stream()
-            .map(ToolBriefDTO::new)
-            .collect(Collectors.toList());
-    }
-
     public List<ToolBriefDTO> getLoggedUserTools() {
         Long userId = userService.getLoggedUserId();
-        return toolRepository
-            .findAllUserTools(userId)
-            .stream()
-            .map(ToolBriefDTO::new)
-            .collect(Collectors.toList());
+        return toolRepository.findAllToolsByUserId(userId);
     }
 
     public List<ToolUnavailableTimeslotDTO> getToolUnavailableTimeslots(Long toolId) {

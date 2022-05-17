@@ -1,18 +1,10 @@
 package com.eneba.enebaback.dto;
 
-import java.util.List;
-
-import com.eneba.enebaback.entities.*;
-
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-@Builder
-@AllArgsConstructor
 public class ToolBriefDTO {
 
     private Long id;
@@ -27,12 +19,13 @@ public class ToolBriefDTO {
 
     private Integer status;
 
-    public ToolBriefDTO(Tool tool) {
-        this.id = tool.getId();
-        this.name = tool.getName();
-        this.category = tool.getToolCategory().getCategoryName();
-        this.price = tool.getPrice();
+    public ToolBriefDTO(Long id, String name, String category, Float price, boolean available) {
+        this.id = id;
+        this.name = name;
+        this.category = category;
+        this.price = price;
         this.pricePeriod = 1;
-        this.status = tool.isAvailable() ? 1 : 2;
+        this.status = available ? 1 : 2;
     }
+
 }

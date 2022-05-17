@@ -1,6 +1,6 @@
 package com.eneba.enebaback.repositories;
 
-import com.eneba.enebaback.dto.ToolListViewDTO;
+import com.eneba.enebaback.dto.ToolBriefDTO;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
@@ -22,9 +22,6 @@ public interface ToolRepository extends JpaRepository<Tool, Long>, JpaSpecificat
     @Query(value = "SELECT * FROM TOOL AS T WHERE T.ID = ?1 AND T.ID NOT IN (SELECT B.TOOL_ID FROM BORROW_LOG AS B WHERE B.RETURNED_AT IS NULL)", nativeQuery = true)
     Tool findAvailableToolById(Long id);
 
-    @Query(value = "SELECT * FROM TOOL AS T WHERE T.OWNER_USER_ID = ?1", nativeQuery = true)
-    List<Tool> findAllUserTools(Long userId);
-
-    @Query(value = "select new com.eneba.enebaback.dto.ToolListViewDTO(id, name, toolCategory.categoryName, price) from Tool where user.id = ?1")
-    List<ToolListViewDTO> findAllToolsByUserId(Long userId);
+    @Query(value = "select new com.eneba.enebaback.dto.ToolBriefDTO(id, name, toolCategory.categoryName, price, available) from Tool where user.id = ?1")
+    List<ToolBriefDTO> findAllToolsByUserId(Long userId);
 }

@@ -1,24 +1,21 @@
 package com.eneba.enebaback.controllers;
 
 import java.util.List;
-import java.util.Timer;
-
-import com.eneba.enebaback.services.UserServiceImpl;
-import com.eneba.enebaback.dto.*;
-import org.apache.commons.lang3.ObjectUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.eneba.enebaback.dto.BorrowToolDTO;
+import com.eneba.enebaback.dto.BorrowingDTO;
 import com.eneba.enebaback.dto.CategoryDTO;
-import com.eneba.enebaback.dto.ToolDTO;
 import com.eneba.enebaback.dto.ToolBriefDTO;
+import com.eneba.enebaback.dto.ToolDTO;
 import com.eneba.enebaback.dto.ToolFilterModel;
 import com.eneba.enebaback.dto.ToolRegisterDTO;
 import com.eneba.enebaback.dto.ToolSortModel;
+import com.eneba.enebaback.dto.ToolUnavailableTimeslotDTO;
+import org.apache.commons.lang3.ObjectUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
 import com.eneba.enebaback.services.impl.ToolServiceImpl;
 
 @RestController
@@ -44,7 +41,7 @@ public class ToolController {
     }
 
     @GetMapping("/user/{userId}")
-    public List<ToolListViewDTO> getAllToolsByUserId(@PathVariable Long userId) {
+    public List<ToolBriefDTO> getAllToolsByUserId(@PathVariable Long userId) {
         return toolService.getAllTools(userId);
     }
 
@@ -77,7 +74,9 @@ public class ToolController {
     }
 
     @GetMapping("/{id}")
-    private ToolDTO getTool(@PathVariable Long id) { return toolService.getTool(id); }
+    private ToolDTO getTool(@PathVariable Long id) {
+        return toolService.getTool(id);
+    }
 
     @GetMapping("/history")
     private List<BorrowToolDTO> getBorrowedToolLog() {
@@ -86,8 +85,7 @@ public class ToolController {
 
     @GetMapping("/my")
     private List<ToolBriefDTO> getCurrentlyLoggedUserTools() {
-        List<ToolBriefDTO> tools = toolService.getLoggedUserTools();
-        return tools;
+        return toolService.getLoggedUserTools();
     }
 
     @PostMapping("/borrow")
