@@ -1,6 +1,7 @@
 package com.eneba.enebaback.services.impl;
 
 import java.time.temporal.ChronoUnit;
+import java.util.*;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
@@ -193,6 +194,23 @@ public class ToolServiceImpl implements ToolService {
                 .toolPlace(log.getTool() == null ? null : log.getTool().getFormattedAddress())
                 .ownerGeoCordX(log.getTool() == null ? null : log.getTool().getGeoCordX())
                 .ownerGeoCordY(log.getTool() == null ? null : log.getTool().getGeoCordY()).build()).collect(Collectors.toList());
+    }
+
+    public List<ToolBriefDTO> getUserTools(Long userId) {
+        return toolRepository
+            .findAllUserTools(userId)
+            .stream()
+            .map(ToolBriefDTO::new)
+            .collect(Collectors.toList());
+    }
+
+    public List<ToolBriefDTO> getLoggedUserTools() {
+        Long userId = userService.getLoggedUserId();
+        return toolRepository
+            .findAllUserTools(userId)
+            .stream()
+            .map(ToolBriefDTO::new)
+            .collect(Collectors.toList());
     }
 
     public List<ToolUnavailableTimeslotDTO> getToolUnavailableTimeslots(Long toolId) {
