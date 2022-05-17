@@ -21,6 +21,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.Formula;
 
 @Entity
 @Table(name = "TOOL")
@@ -67,7 +68,7 @@ public class Tool {
     @Column(name = "price")
     private Float price;
 
-    @Column(name = "available")
+    @Formula(value = "(SELECT CASE WHEN (COUNT(b.id) > 0) THEN false ELSE true END FROM borrow_log AS b WHERE b.tool_id = id AND b.borrowed_at <= CURRENT_DATE AND b.returned_at >= CURRENT_DATE)")
     private boolean available;
 
     @Column(name = "ASSISTED_TRANSPORTATION")
