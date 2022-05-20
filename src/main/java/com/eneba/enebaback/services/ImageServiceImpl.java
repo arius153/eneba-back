@@ -4,11 +4,19 @@ import com.eneba.enebaback.entities.Image;
 import com.eneba.enebaback.entities.Tool;
 import com.eneba.enebaback.entities.User;
 import com.eneba.enebaback.repositories.ImageRepository;
+import org.imgscalr.Scalr;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.imageio.ImageIO;
+import javax.transaction.NotSupportedException;
+import javax.transaction.Transactional;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -19,6 +27,7 @@ public class ImageServiceImpl {
     @Autowired
     ImageRepository imageRepository;
 
+    @Transactional
     public List<Image> saveAllImages(Tool tool, List<MultipartFile> images) {
         List<Image> imageList = new ArrayList<>();
         List<byte[]> imageContentList = new ArrayList<>();
@@ -29,7 +38,7 @@ public class ImageServiceImpl {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            imageContentList.add(bytes);
+            imageContentList.add(scaleImage(bytes));
         }
 
         for(byte[] image : imageContentList) {
@@ -43,5 +52,17 @@ public class ImageServiceImpl {
         img.setTool(tool);
         img.setImage(image);
         return imageRepository.save(img);
+    }
+
+    private byte[] scaleImage(byte[] image) {
+        BufferedImage imageToResize;
+        try (InputStream is = new ByteArrayInputStream(image); ByteArrayOutputStream boas = new ByteArrayOutputStream()) {
+            imageToResize = ImageIO.read(is);
+            imageToResize = Scalr.resize(imageToResize, Scalr.Method.QUALITY, 300);
+            ImageIO.write(imageToResize, "png", boas);
+            return boas.toByteArray();
+        } catch (IOException | IllegalArgumentException e) {
+            return image;
+        }
     }
 }
