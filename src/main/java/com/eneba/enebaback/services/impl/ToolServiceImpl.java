@@ -117,7 +117,7 @@ public class ToolServiceImpl implements ToolService {
     }
 
     @Transactional
-    public Long registerTool(ToolRegisterDTO toolRegisterDTO, List<MultipartFile> files) {
+    public ToolBriefDTO registerTool(ToolRegisterDTO toolRegisterDTO, List<MultipartFile> files) {
         Long loggedUserId = userService.getLoggedUserId();
         if (loggedUserId == null) {
             return null;
@@ -139,7 +139,7 @@ public class ToolServiceImpl implements ToolService {
         if (!CollectionUtils.isEmpty(files)) {
             imageService.saveAllImages(tool, files);
         }
-        return tool.getId();
+        return new ToolBriefDTO(tool);
     }
 
     public Long borrowTool(BorrowingDTO borrowingDTO) {

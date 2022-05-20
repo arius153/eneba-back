@@ -31,7 +31,7 @@ public class ToolController {
     }
 
     @PostMapping
-    public Long addTool(@RequestPart("data") ToolRegisterDTO toolRegisterDTO, @RequestPart(value = "files", required = false) List<MultipartFile> files) {
+    public ToolBriefDTO addTool(@RequestPart("data") ToolRegisterDTO toolRegisterDTO, @RequestPart(value = "files", required = false) List<MultipartFile> files) {
         return toolService.registerTool(toolRegisterDTO, files);
     }
 
