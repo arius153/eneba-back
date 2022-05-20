@@ -1,5 +1,6 @@
 package com.eneba.enebaback.dto;
 
+import com.eneba.enebaback.entities.Tool;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -26,6 +27,16 @@ public class ToolBriefDTO {
         this.price = price;
         this.pricePeriod = 1;
         this.status = available ? 1 : 2;
+    }
+
+    public ToolBriefDTO(Tool tool) {
+        this.id = tool.getId();
+        this.name = tool.getName();
+        this.category = tool.getToolCategory().getCategoryName();
+        this.price = tool.getPrice();
+        this.pricePeriod = 1;
+        this.status = tool.isAvailable() ? 1 : 2;
+
     }
 
 }
