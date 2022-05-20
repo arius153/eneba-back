@@ -24,6 +24,9 @@ public class UserReview {
     @JoinColumn(name = "REVIEWED_USER_ID", nullable = false)
     private User reviewedUser;
 
+    @Column(name = "TOOL_NAME")
+    private String toolName;
+
     @ManyToOne
     @JoinColumn(name = "REVIEWED_BY_USER_ID", nullable = false)
     private User reviewedByUser;

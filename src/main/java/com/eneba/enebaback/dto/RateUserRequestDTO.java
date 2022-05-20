@@ -13,6 +13,7 @@ public class RateUserRequestDTO {
 
     private String comment;
     private Long userToRateId;
+    private Long toolToRateId;
     private Integer rating;
 
 }

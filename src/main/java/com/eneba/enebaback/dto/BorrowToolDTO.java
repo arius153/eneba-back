@@ -14,6 +14,8 @@ import lombok.NoArgsConstructor;
 @Builder
 public class BorrowToolDTO {
 
+    private Long ownerId;
+
     private String toolName;
 
     private Long toolId;

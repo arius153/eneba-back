@@ -26,6 +26,8 @@ public class UserReviewDTO {
 
     private List<UserReviewAnswerResponseDTO> answers;
 
+    private String toolName;
+
     public UserReviewDTO(UserReview userReview) {
         this.id = userReview.getId();
         this.rating = userReview.getRating();
@@ -33,6 +35,7 @@ public class UserReviewDTO {
         this.reviewedAt = userReview.getReviewedAt();
         this.reviewedBy = userReview.getReviewedByUser().getName() + " " + userReview.getReviewedByUser().getSurname();
         this.answers = userReview.getAnswers().stream().map(UserReviewAnswerResponseDTO::new).collect(Collectors.toList());
+        this.toolName = userReview.getToolName();
     }
 
 }
