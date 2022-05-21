@@ -3,6 +3,7 @@ package com.eneba.enebaback.services;
 import com.eneba.enebaback.dto.*;
 import com.eneba.enebaback.entities.UserReview;
 import com.eneba.enebaback.entities.UserReviewAnswer;
+import com.eneba.enebaback.repositories.ToolRepository;
 import com.eneba.enebaback.repositories.UserReviewAnswerRepository;
 import com.eneba.enebaback.repositories.UserReviewRepository;
 import com.eneba.enebaback.utils.MathUtils;
@@ -21,6 +22,8 @@ public class UserReviewServiceImpl {
     UserReviewRepository userReviewRepository;
     @Autowired
     UserReviewAnswerRepository userReviewAnswerRepository;
+    @Autowired
+    ToolRepository toolRepository;
 
     @Autowired
     UserServiceImpl userService;
@@ -41,6 +44,7 @@ public class UserReviewServiceImpl {
         UserReview userReview = UserReview.builder()
                 .comments(rateUserRequestDTO.getComment())
                 .rating(rateUserRequestDTO.getRating())
+                .toolName(toolRepository.getById(rateUserRequestDTO.getToolToRateId()).getName())
                 .reviewedAt(LocalDateTime.now())
                 .reviewedByUser(userService.getLoggedUserEntity())
                 .reviewedUser(userService.getUserById(rateUserRequestDTO.getUserToRateId()))
