@@ -36,8 +36,8 @@ public class ToolController {
     }
 
     @PutMapping("/{id}")
-    public void editTool(@RequestPart("data") ToolRegisterDTO toolRegisterDTO, @RequestPart(value = "files", required = false) List<MultipartFile> files, @PathVariable("id") Long id) {
-        toolService.editTool(toolRegisterDTO, files, id);
+    public ToolDTO editTool(@RequestPart("data") ToolRegisterDTO toolRegisterDTO, @RequestPart(value = "files", required = false) List<MultipartFile> files,  @PathVariable("id") Long id) {
+        return toolService.editTool(toolRegisterDTO, files, id);
     }
 
     @GetMapping("/")

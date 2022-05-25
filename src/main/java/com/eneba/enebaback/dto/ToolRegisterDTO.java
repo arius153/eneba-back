@@ -30,5 +30,5 @@ public class ToolRegisterDTO {
     private String pickUpTimeWorkDay;
     private List<byte[]> files;
     private Long version;
-
+    private Boolean override;
 }
