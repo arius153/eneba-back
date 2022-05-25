@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 import javax.transaction.Transactional;
 
 import com.eneba.enebaback.dto.*;
+import com.eneba.enebaback.entities.Image;
 import com.eneba.enebaback.services.UserReviewServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -86,6 +87,7 @@ public class ToolServiceImpl implements ToolService {
                 .pickUpTimeWeekend(tool.getPickUpTimeWeekend())
                 .availableDays(tool.getAvailableDays())
                 .simplifiedUserDTO(simplifiedUserDTO)
+                .owner(Objects.equals(tool.getUser().getId(), userService.getLoggedUserId()))
                 .build();
     }
 
@@ -131,6 +133,7 @@ public class ToolServiceImpl implements ToolService {
                 .geoCordX(toolRegisterDTO.getLat())
                 .geoCordY(toolRegisterDTO.getLng())
                 .formattedAddress(toolRegisterDTO.getAddress())
+                .assistedTransportation(toolRegisterDTO.getAssistedTransportation())
                 .pickUpTimeWeekend(toolRegisterDTO.getPickUpTimeWeekend())
                 .pickUpTimeWorkDay(toolRegisterDTO.getPickUpTimeWorkDay())
                 .availableDays(toolRegisterDTO.getDaysAvailable())
@@ -140,6 +143,34 @@ public class ToolServiceImpl implements ToolService {
             imageService.saveAllImages(tool, files);
         }
         return new ToolBriefDTO(tool);
+    }
+
+    @Transactional
+    public void editTool(ToolRegisterDTO toolRegisterDTO, List<MultipartFile> files, Long id) {
+        var tool = toolRepository.findById(id).orElse(null);
+        if (tool == null) {
+            return;
+        }
+        if (tool.getUser() != null && !Objects.equals(tool.getUser().getId(), userService.getLoggedUserId())) {
+            return;
+        }
+        tool.setName(toolRegisterDTO.getName());
+        tool.setAssistedTransportation(toolRegisterDTO.getAssistedTransportation());
+        tool.setToolCategory(toolCategoryRepository.findById(toolRegisterDTO.getCategory()).orElse(null));
+        tool.setPrice(toolRegisterDTO.getPrice());
+        tool.setDescription(toolRegisterDTO.getDescription());
+        tool.setGeoCordX(toolRegisterDTO.getLat());
+        tool.setGeoCordY(toolRegisterDTO.getLng());
+        tool.setFormattedAddress(toolRegisterDTO.getAddress());
+        tool.setPickUpTimeWeekend(toolRegisterDTO.getPickUpTimeWeekend());
+        tool.setPickUpTimeWorkDay(toolRegisterDTO.getPickUpTimeWorkDay());
+        tool.setAvailableDays(toolRegisterDTO.getDaysAvailable());
+        tool.setImages(new HashSet<>());
+        tool.setVersion(toolRegisterDTO.getVersion() != null ? toolRegisterDTO.getVersion() : 1);
+        tool = toolRepository.save(tool);
+        if (!CollectionUtils.isEmpty(files)) {
+            imageService.saveAllImages(tool, files);
+        }
     }
 
     public Long borrowTool(BorrowingDTO borrowingDTO) {
@@ -207,9 +238,41 @@ public class ToolServiceImpl implements ToolService {
     public List<ToolUnavailableTimeslotDTO> getToolUnavailableTimeslots(Long toolId) {
         List<BorrowLog> borrowLogs = borrowLogRepository.findFutureBorrows(toolId);
         List<ToolUnavailableTimeslotDTO> toolUnavailableTimeslotDTOS = new ArrayList<>();
-        for(BorrowLog borrowLog : borrowLogs) {
+        for (BorrowLog borrowLog : borrowLogs) {
             toolUnavailableTimeslotDTOS.add(new ToolUnavailableTimeslotDTO(borrowLog));
         }
         return toolUnavailableTimeslotDTOS;
+    }
+
+    @Transactional
+    public ToolRegisterDTO getToolForEditing(Long id) {
+        Tool toolToEdit = toolRepository.findById(id).orElse(null);
+        if (toolToEdit == null) {
+            return null;
+        }
+        if (toolToEdit.getUser() != null && !Objects.equals(userService.getLoggedUserId(), toolToEdit.getUser().getId())) {
+            return null;
+        }
+        return mapToToolRegisterDTO(toolToEdit);
+    }
+
+    @Transactional
+    public ToolRegisterDTO mapToToolRegisterDTO(Tool tool) {
+        return ToolRegisterDTO.builder()
+                .id(tool.getId())
+                .name(tool.getName())
+                .category(tool.getToolCategory() != null ? tool.getToolCategory().getId() : null)
+                .price(tool.getPrice())
+                .assistedTransportation(tool.getAssistedTransportation())
+                .description(tool.getDescription())
+                .address(tool.getFormattedAddress())
+                .lat(tool.getGeoCordX())
+                .lng(tool.getGeoCordY())
+                .daysAvailable(tool.getAvailableDays())
+                .pickUpTimeWeekend(tool.getPickUpTimeWeekend())
+                .pickUpTimeWorkDay(tool.getPickUpTimeWorkDay())
+                .files(tool.getImages().stream().map(Image::getImage).collect(Collectors.toList()))
+                .version(tool.getVersion())
+                .build();
     }
 }
