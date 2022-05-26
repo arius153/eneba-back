@@ -3,6 +3,7 @@ package com.eneba.enebaback.services;
 import com.eneba.enebaback.dto.*;
 import com.eneba.enebaback.entities.UserReview;
 import com.eneba.enebaback.entities.UserReviewAnswer;
+import com.eneba.enebaback.logging.Logging;
 import com.eneba.enebaback.repositories.ToolRepository;
 import com.eneba.enebaback.repositories.UserReviewAnswerRepository;
 import com.eneba.enebaback.repositories.UserReviewRepository;
@@ -28,6 +29,7 @@ public class UserReviewServiceImpl {
     @Autowired
     UserServiceImpl userService;
 
+    @Logging("Access user reviews")
     public List<UserReviewDTO> getUserReviewsByUserId(Long userId) {
         List<UserReview> userReviews = userReviewRepository.findUserReviewsByUserId(userId);
         List<UserReviewDTO> userReviewDTOS = new ArrayList<>();
@@ -40,6 +42,7 @@ public class UserReviewServiceImpl {
         return userReviewDTOS;
     }
 
+    @Logging("Rated a user")
     public Long rateUser(RateUserRequestDTO rateUserRequestDTO) {
         UserReview userReview = UserReview.builder()
                 .comments(rateUserRequestDTO.getComment())
@@ -60,6 +63,7 @@ public class UserReviewServiceImpl {
     }
 
     @Transactional
+    @Logging("Answered to user review")
     public UserReviewAnswerResponseDTO answerToReview(UserReviewAnswerRequestDTO userReviewAnswerRequestDto) {
         var userReview = userReviewRepository.findById(userReviewAnswerRequestDto.getUserReviewId()).orElse(null);
         if (userReview == null) {
