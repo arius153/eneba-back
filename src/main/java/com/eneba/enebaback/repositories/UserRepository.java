@@ -13,4 +13,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     @Query(value = "select concat(name, ' ' ,surname) from User WHERE id = ?1")
     String getFullNameUsingId(Long userId);
+
+    boolean existsByEmail(String email);
 }
