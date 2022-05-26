@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 import javax.transaction.Transactional;
 
 import com.eneba.enebaback.dto.*;
+import com.eneba.enebaback.logging.Logging;
 import com.eneba.enebaback.services.UserReviewServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -54,6 +55,7 @@ public class ToolServiceImpl implements ToolService {
     private UserReviewServiceImpl userReviewService;
 
     @Override
+    @Logging("All tools requested")
     public List<ToolDTO> getAllTools() {
         return toolRepository.findAll()
                 .stream()
@@ -68,6 +70,7 @@ public class ToolServiceImpl implements ToolService {
 
     @Override
     @Transactional
+    @Logging("Access specific tool")
     public ToolDTO getTool(Long id) {
         Tool tool = toolRepository.getById(id);
         SimplifiedUserDTO simplifiedUserDTO = userReviewService.getUserAverage(tool.getUser().getId());
@@ -90,6 +93,7 @@ public class ToolServiceImpl implements ToolService {
     }
 
     @Override
+    @Logging("Access sorted tools")
     public List<ToolDTO> getSortedAndFilteredTools(ToolSortModel toolSortModel, ToolFilterModel toolFilterModel) {
         if (!toolSortModel.isEmpty() && toolFilterModel.isEmpty()) {
             return toolRepository
@@ -117,6 +121,7 @@ public class ToolServiceImpl implements ToolService {
     }
 
     @Transactional
+    @Logging("Register new tool")
     public ToolBriefDTO registerTool(ToolRegisterDTO toolRegisterDTO, List<MultipartFile> files) {
         Long loggedUserId = userService.getLoggedUserId();
         if (loggedUserId == null) {
@@ -142,6 +147,7 @@ public class ToolServiceImpl implements ToolService {
         return new ToolBriefDTO(tool);
     }
 
+    @Logging("Borrow a tool")
     public Long borrowTool(BorrowingDTO borrowingDTO) {
         BorrowLog borrowLog = new BorrowLog();
         borrowLog.setTool(toolRepository.findById(borrowingDTO.getToolId()).orElse(null));
@@ -165,6 +171,7 @@ public class ToolServiceImpl implements ToolService {
         return toolRepository.findAllAvailableToolsByCategory(categoryId);
     }
 
+    @Logging("Access available tool categories")
     public List<CategoryDTO> getAllAvailableCategories() {
         return toolCategoryRepository.findAll()
                 .stream()
@@ -176,6 +183,7 @@ public class ToolServiceImpl implements ToolService {
         return toolRepository.findAvailableToolById(toolId) != null;
     }
 
+    @Logging("Access borrowed tool logs")
     public List<BorrowToolDTO> getBorrowedToolLog() {
         User user = userService.getLoggedUserEntity();
         if (user == null) {
@@ -199,11 +207,13 @@ public class ToolServiceImpl implements ToolService {
                 .build()).collect(Collectors.toList());
     }
 
+    @Logging("Access user's own tools")
     public List<ToolBriefDTO> getLoggedUserTools() {
         Long userId = userService.getLoggedUserId();
         return toolRepository.findAllToolsByUserId(userId);
     }
 
+    @Logging("Check tool availability")
     public List<ToolUnavailableTimeslotDTO> getToolUnavailableTimeslots(Long toolId) {
         List<BorrowLog> borrowLogs = borrowLogRepository.findFutureBorrows(toolId);
         List<ToolUnavailableTimeslotDTO> toolUnavailableTimeslotDTOS = new ArrayList<>();

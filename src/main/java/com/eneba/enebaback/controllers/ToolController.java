@@ -12,6 +12,8 @@ import com.eneba.enebaback.dto.ToolRegisterDTO;
 import com.eneba.enebaback.dto.ToolSortModel;
 import com.eneba.enebaback.dto.ToolUnavailableTimeslotDTO;
 import org.apache.commons.lang3.ObjectUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -21,6 +23,8 @@ import com.eneba.enebaback.services.impl.ToolServiceImpl;
 @RestController
 @RequestMapping("/tool")
 public class ToolController {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(ToolController.class);
 
     @Autowired
     ToolServiceImpl toolService;
@@ -67,6 +71,7 @@ public class ToolController {
                     .reversed(reversed)
                     .build();
 
+            LOGGER.error("whatever");
             return toolService.getSortedAndFilteredTools(toolSortModel, toolFilterModel);
         }
 
