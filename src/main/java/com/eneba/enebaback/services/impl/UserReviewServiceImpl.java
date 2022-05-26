@@ -1,4 +1,4 @@
-package com.eneba.enebaback.services;
+package com.eneba.enebaback.services.impl;
 
 import com.eneba.enebaback.dto.*;
 import com.eneba.enebaback.entities.UserReview;
@@ -7,6 +7,8 @@ import com.eneba.enebaback.logging.Logging;
 import com.eneba.enebaback.repositories.ToolRepository;
 import com.eneba.enebaback.repositories.UserReviewAnswerRepository;
 import com.eneba.enebaback.repositories.UserReviewRepository;
+import com.eneba.enebaback.services.UserReviewService;
+import com.eneba.enebaback.services.UserService;
 import com.eneba.enebaback.utils.MathUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class UserReviewServiceImpl {
+public class UserReviewServiceImpl implements UserReviewService {
 
     @Autowired
     UserReviewRepository userReviewRepository;
@@ -27,7 +29,7 @@ public class UserReviewServiceImpl {
     ToolRepository toolRepository;
 
     @Autowired
-    UserServiceImpl userService;
+    UserService userService;
 
     @Logging("Access user reviews")
     public List<UserReviewDTO> getUserReviewsByUserId(Long userId) {

@@ -12,7 +12,7 @@ import javax.transaction.Transactional;
 import com.eneba.enebaback.dto.*;
 import com.eneba.enebaback.entities.Image;
 import com.eneba.enebaback.logging.Logging;
-import com.eneba.enebaback.services.UserReviewServiceImpl;
+import com.eneba.enebaback.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
@@ -27,9 +27,6 @@ import com.eneba.enebaback.repositories.BorrowLogRepository;
 import com.eneba.enebaback.repositories.ToolCategoryRepository;
 import com.eneba.enebaback.repositories.ToolRepository;
 import com.eneba.enebaback.repositories.UserRepository;
-import com.eneba.enebaback.services.ImageServiceImpl;
-import com.eneba.enebaback.services.ToolService;
-import com.eneba.enebaback.services.UserServiceImpl;
 import com.eneba.enebaback.utils.ToolSpecification;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -49,13 +46,13 @@ public class ToolServiceImpl implements ToolService {
     private UserRepository userRepository;
 
     @Autowired
-    private UserServiceImpl userService;
+    private UserService userService;
 
     @Autowired
-    private ImageServiceImpl imageService;
+    private ImageService imageService;
 
     @Autowired
-    private UserReviewServiceImpl userReviewService;
+    private UserReviewService userReviewService;
 
     @Override
     @Logging("All tools requested")

@@ -4,9 +4,9 @@ import com.eneba.enebaback.dto.RateUserRequestDTO;
 import com.eneba.enebaback.dto.UserReviewAnswerRequestDTO;
 import com.eneba.enebaback.dto.UserReviewAnswerResponseDTO;
 import com.eneba.enebaback.dto.UserReviewDTO;
-import com.eneba.enebaback.entities.User;
-import com.eneba.enebaback.services.UserReviewServiceImpl;
-import com.eneba.enebaback.services.UserServiceImpl;
+import com.eneba.enebaback.services.UserReviewService;
+import com.eneba.enebaback.services.UserService;
+import com.eneba.enebaback.services.impl.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,10 +17,10 @@ import java.util.List;
 public class UserReviewController {
 
     @Autowired
-    private UserReviewServiceImpl userReviewService;
+    private UserReviewService userReviewService;
 
     @Autowired
-    private UserServiceImpl userService;
+    private UserService userService;
 
     @GetMapping
     public List<UserReviewDTO> getUserReviews() {

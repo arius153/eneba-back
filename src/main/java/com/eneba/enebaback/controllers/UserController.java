@@ -1,7 +1,8 @@
 package com.eneba.enebaback.controllers;
 
 import com.eneba.enebaback.dto.UserDTO;
-import com.eneba.enebaback.services.UserServiceImpl;
+import com.eneba.enebaback.services.UserService;
+import com.eneba.enebaback.services.impl.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -10,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 public class UserController
 {
     @Autowired
-    private UserServiceImpl userService;
+    private UserService userService;
 
     @GetMapping
     public UserDTO getLoggedUserData() {

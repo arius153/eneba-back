@@ -4,7 +4,8 @@ import com.eneba.enebaback.dto.CustomUser;
 import com.eneba.enebaback.dto.UserRegisterDTO;
 import com.eneba.enebaback.dto.jwt.JwtRequest;
 import com.eneba.enebaback.dto.jwt.JwtResponse;
-import com.eneba.enebaback.services.UserServiceImpl;
+import com.eneba.enebaback.services.UserService;
+import com.eneba.enebaback.services.impl.UserServiceImpl;
 import com.eneba.enebaback.utils.JWTUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,7 +26,7 @@ public class LoginController {
     AuthenticationManager authenticationManager;
 
     @Autowired
-    private UserServiceImpl userService;
+    private UserService userService;
 
     @PostMapping("/auth")
     public JwtResponse authenticate(@RequestBody JwtRequest jwtRequest) {
