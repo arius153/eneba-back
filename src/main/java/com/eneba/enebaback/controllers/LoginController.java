@@ -9,9 +9,7 @@ import com.eneba.enebaback.utils.JWTUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -31,18 +29,14 @@ public class LoginController {
 
     @PostMapping("/auth")
     public JwtResponse authenticate(@RequestBody JwtRequest jwtRequest) {
-
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                     jwtRequest.getEmail(), jwtRequest.getPassword()));
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Bad credentials");
         }
-
         final CustomUser userDetails = userService.loadUserByUsername(jwtRequest.getEmail());
-
         final String token = jwtUtil.generateToken(userDetails);
-
         return new JwtResponse(token);
     }
 

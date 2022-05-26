@@ -234,6 +234,15 @@ public class ToolServiceImpl implements ToolService {
                 .build()).collect(Collectors.toList());
     }
 
+    public List<ReservedToolDTO> getCurrentlyRentedLogs() {
+        User user = userService.getLoggedUserEntity();
+        if (user == null) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "There is no user!");
+        }
+
+       return borrowLogRepository.findCurrentlyRentedByUserId(user.getId());
+    }
+
     @Logging("Access user's own tools")
     public List<ToolBriefDTO> getLoggedUserTools() {
         Long userId = userService.getLoggedUserId();

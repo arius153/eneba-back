@@ -2,15 +2,7 @@ package com.eneba.enebaback.controllers;
 
 import java.util.List;
 
-import com.eneba.enebaback.dto.BorrowToolDTO;
-import com.eneba.enebaback.dto.BorrowingDTO;
-import com.eneba.enebaback.dto.CategoryDTO;
-import com.eneba.enebaback.dto.ToolBriefDTO;
-import com.eneba.enebaback.dto.ToolDTO;
-import com.eneba.enebaback.dto.ToolFilterModel;
-import com.eneba.enebaback.dto.ToolRegisterDTO;
-import com.eneba.enebaback.dto.ToolSortModel;
-import com.eneba.enebaback.dto.ToolUnavailableTimeslotDTO;
+import com.eneba.enebaback.dto.*;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -106,5 +98,10 @@ public class ToolController {
     @GetMapping("/get-edit/{id}")
     public ToolRegisterDTO getToolForEditing(@PathVariable Long id) {
         return toolService.getToolForEditing(id);
+    }
+
+    @GetMapping("/currently-rented")
+    public List<ReservedToolDTO> getCurrentlyRentedLogs() {
+        return toolService.getCurrentlyRentedLogs();
     }
 }
