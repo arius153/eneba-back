@@ -1,8 +1,11 @@
 package com.eneba.enebaback.services;
 
 import com.eneba.enebaback.dto.*;
+import com.eneba.enebaback.entities.User;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -29,8 +32,10 @@ public interface ToolService {
 
     List<ToolBriefDTO> getLoggedUserTools();
 
-    public List<ToolUnavailableTimeslotDTO> getToolUnavailableTimeslots(Long toolId);
+    List<ToolUnavailableTimeslotDTO> getToolUnavailableTimeslots(Long toolId);
 
     ToolRegisterDTO getToolForEditing(Long id);
+
+    List<ReservedToolDTO> getCurrentlyRentedLogs();
 
 }

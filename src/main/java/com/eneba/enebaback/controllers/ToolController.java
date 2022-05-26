@@ -2,15 +2,7 @@ package com.eneba.enebaback.controllers;
 
 import java.util.List;
 
-import com.eneba.enebaback.dto.BorrowToolDTO;
-import com.eneba.enebaback.dto.BorrowingDTO;
-import com.eneba.enebaback.dto.CategoryDTO;
-import com.eneba.enebaback.dto.ToolBriefDTO;
-import com.eneba.enebaback.dto.ToolDTO;
-import com.eneba.enebaback.dto.ToolFilterModel;
-import com.eneba.enebaback.dto.ToolRegisterDTO;
-import com.eneba.enebaback.dto.ToolSortModel;
-import com.eneba.enebaback.dto.ToolUnavailableTimeslotDTO;
+import com.eneba.enebaback.dto.*;
 import com.eneba.enebaback.services.ToolService;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
