@@ -30,18 +30,14 @@ public class LoginController {
 
     @PostMapping("/auth")
     public JwtResponse authenticate(@RequestBody JwtRequest jwtRequest) {
-
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                     jwtRequest.getEmail(), jwtRequest.getPassword()));
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Bad credentials");
         }
-
         final CustomUser userDetails = userService.loadUserByUsername(jwtRequest.getEmail());
-
         final String token = jwtUtil.generateToken(userDetails);
-
         return new JwtResponse(token);
     }
 
