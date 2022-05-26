@@ -1,9 +1,10 @@
-package com.eneba.enebaback.services;
+package com.eneba.enebaback.services.impl;
 
 import com.eneba.enebaback.entities.Image;
 import com.eneba.enebaback.entities.Tool;
 import com.eneba.enebaback.entities.User;
 import com.eneba.enebaback.repositories.ImageRepository;
+import com.eneba.enebaback.services.ImageService;
 import org.imgscalr.Scalr;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,7 +25,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
-public class ImageServiceImpl {
+public class ImageServiceImpl implements ImageService {
 
     @Autowired
     ImageRepository imageRepository;

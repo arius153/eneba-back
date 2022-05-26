@@ -1,4 +1,4 @@
-package com.eneba.enebaback.services;
+package com.eneba.enebaback.services.impl;
 
 import com.eneba.enebaback.EnebaBackApplication;
 import com.eneba.enebaback.dto.CustomUser;
@@ -6,6 +6,7 @@ import com.eneba.enebaback.dto.UserRegisterDTO;
 import com.eneba.enebaback.entities.User;
 import com.eneba.enebaback.logging.Logging;
 import com.eneba.enebaback.repositories.UserRepository;
+import com.eneba.enebaback.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContext;
@@ -22,7 +23,7 @@ import java.util.ArrayList;
 import java.util.Optional;
 
 @Service
-public class UserServiceImpl implements UserDetailsService {
+public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserRepository userRepository;

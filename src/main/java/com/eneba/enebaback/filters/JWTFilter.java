@@ -1,12 +1,12 @@
 package com.eneba.enebaback.filters;
 
 import com.eneba.enebaback.dto.CustomUser;
-import com.eneba.enebaback.services.UserServiceImpl;
+import com.eneba.enebaback.services.UserService;
+import com.eneba.enebaback.services.impl.UserServiceImpl;
 import com.eneba.enebaback.utils.JWTUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -24,7 +24,7 @@ public class JWTFilter extends OncePerRequestFilter {
     private JWTUtil jwtUtil;
 
     @Autowired
-    private UserServiceImpl userService;
+    private UserService userService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {

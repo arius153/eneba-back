@@ -2,6 +2,7 @@ package com.eneba.enebaback;
 
 
 import com.eneba.enebaback.filters.JWTFilter;
+import com.eneba.enebaback.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -28,7 +29,7 @@ import java.util.stream.Stream;
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Autowired
-    private UserDetailsService userService;
+    private UserService userService;
 
     @Autowired
     private JWTFilter jwtFilter;
