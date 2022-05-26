@@ -10,10 +10,12 @@ import java.util.stream.Collectors;
 import javax.transaction.Transactional;
 
 import com.eneba.enebaback.dto.*;
+import com.eneba.enebaback.entities.Image;
 import com.eneba.enebaback.logging.Logging;
 import com.eneba.enebaback.services.UserReviewServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -29,6 +31,7 @@ import com.eneba.enebaback.services.ImageServiceImpl;
 import com.eneba.enebaback.services.ToolService;
 import com.eneba.enebaback.services.UserServiceImpl;
 import com.eneba.enebaback.utils.ToolSpecification;
+import org.springframework.web.server.ResponseStatusException;
 
 @Service
 public class ToolServiceImpl implements ToolService {
@@ -73,23 +76,9 @@ public class ToolServiceImpl implements ToolService {
     @Logging("Access specific tool")
     public ToolDTO getTool(Long id) {
         Tool tool = toolRepository.getById(id);
-        SimplifiedUserDTO simplifiedUserDTO = userReviewService.getUserAverage(tool.getUser().getId());
-        simplifiedUserDTO.setFullName(userService.getUserFullName(simplifiedUserDTO.getUserId()));
-        return ToolDTO.builder()
-                .description(tool.getDescription())
-                .toolCategory(tool.getToolCategory().getCategoryName())
-                .geoCordX(tool.getGeoCordX())
-                .geoCordY(tool.getGeoCordY())
-                .name(tool.getName())
-                .price(tool.getPrice())
-                .assistedTransportation(tool.getAssistedTransportation())
-                .images(tool.getImages().stream().map(x -> Base64.getEncoder().encodeToString(x.getImage())).collect(Collectors.toList()))
-                .formattedAddress(tool.getFormattedAddress())
-                .pickUpTimeWorkDay(tool.getPickUpTimeWorkDay())
-                .pickUpTimeWeekend(tool.getPickUpTimeWeekend())
-                .availableDays(tool.getAvailableDays())
-                .simplifiedUserDTO(simplifiedUserDTO)
-                .build();
+        var simplifiedUserDto = getSimplifiedUserDTO(tool.getUser().getId());
+        return mapToolToToolDTO(tool, simplifiedUserDto);
+
     }
 
     @Override
@@ -136,6 +125,7 @@ public class ToolServiceImpl implements ToolService {
                 .geoCordX(toolRegisterDTO.getLat())
                 .geoCordY(toolRegisterDTO.getLng())
                 .formattedAddress(toolRegisterDTO.getAddress())
+                .assistedTransportation(toolRegisterDTO.getAssistedTransportation())
                 .pickUpTimeWeekend(toolRegisterDTO.getPickUpTimeWeekend())
                 .pickUpTimeWorkDay(toolRegisterDTO.getPickUpTimeWorkDay())
                 .availableDays(toolRegisterDTO.getDaysAvailable())
@@ -145,6 +135,43 @@ public class ToolServiceImpl implements ToolService {
             imageService.saveAllImages(tool, files);
         }
         return new ToolBriefDTO(tool);
+    }
+
+    @Transactional
+    @Logging("Editing a tool")
+    public ToolDTO editTool(ToolRegisterDTO toolRegisterDTO, List<MultipartFile> files, Long id) {
+        var tool = toolRepository.findById(id).orElse(null);
+        if (tool == null) {
+            return null;
+        }
+        if (tool.getUser() != null && !Objects.equals(tool.getUser().getId(), userService.getLoggedUserId())) {
+            return null;
+        }
+        if (tool.getVersion() > toolRegisterDTO.getVersion() && !toolRegisterDTO.getOverride()) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Request with old version");
+        }
+        tool.setName(toolRegisterDTO.getName());
+        tool.setAssistedTransportation(toolRegisterDTO.getAssistedTransportation());
+        tool.setToolCategory(toolCategoryRepository.findById(toolRegisterDTO.getCategory()).orElse(null));
+        tool.setPrice(toolRegisterDTO.getPrice());
+        tool.setDescription(toolRegisterDTO.getDescription());
+        tool.setGeoCordX(toolRegisterDTO.getLat());
+        tool.setGeoCordY(toolRegisterDTO.getLng());
+        tool.setFormattedAddress(toolRegisterDTO.getAddress());
+        tool.setPickUpTimeWeekend(toolRegisterDTO.getPickUpTimeWeekend());
+        tool.setPickUpTimeWorkDay(toolRegisterDTO.getPickUpTimeWorkDay());
+        tool.setAvailableDays(toolRegisterDTO.getDaysAvailable());
+        tool.setVersion(toolRegisterDTO.getVersion() != null ? toolRegisterDTO.getVersion() : 0);
+        tool = toolRepository.save(tool);
+        imageService.deleteOldImagesByIds(tool.getImages().stream().map(Image::getId).collect(Collectors.toList()));
+        Set<Image> images = new HashSet<>();
+        if (!CollectionUtils.isEmpty(files)) {
+            images = imageService.saveAllImages(tool, files);
+        }
+        tool.setImages(images);
+        var simplifiedUserDto = getSimplifiedUserDTO(tool.getUser().getId());
+        return mapToolToToolDTO(tool, simplifiedUserDto);
+
     }
 
     @Logging("Borrow a tool")
@@ -217,9 +244,66 @@ public class ToolServiceImpl implements ToolService {
     public List<ToolUnavailableTimeslotDTO> getToolUnavailableTimeslots(Long toolId) {
         List<BorrowLog> borrowLogs = borrowLogRepository.findFutureBorrows(toolId);
         List<ToolUnavailableTimeslotDTO> toolUnavailableTimeslotDTOS = new ArrayList<>();
-        for(BorrowLog borrowLog : borrowLogs) {
+        for (BorrowLog borrowLog : borrowLogs) {
             toolUnavailableTimeslotDTOS.add(new ToolUnavailableTimeslotDTO(borrowLog));
         }
         return toolUnavailableTimeslotDTOS;
+    }
+
+    @Transactional
+    public ToolRegisterDTO getToolForEditing(Long id) {
+        Tool toolToEdit = toolRepository.findById(id).orElse(null);
+        if (toolToEdit == null) {
+            return null;
+        }
+        if (toolToEdit.getUser() != null && !Objects.equals(userService.getLoggedUserId(), toolToEdit.getUser().getId())) {
+            return null;
+        }
+        return mapToToolRegisterDTO(toolToEdit);
+    }
+
+    @Transactional
+    public ToolRegisterDTO mapToToolRegisterDTO(Tool tool) {
+        return ToolRegisterDTO.builder()
+                .id(tool.getId())
+                .name(tool.getName())
+                .category(tool.getToolCategory() != null ? tool.getToolCategory().getId() : null)
+                .price(tool.getPrice())
+                .assistedTransportation(tool.getAssistedTransportation())
+                .description(tool.getDescription())
+                .address(tool.getFormattedAddress())
+                .lat(tool.getGeoCordX())
+                .lng(tool.getGeoCordY())
+                .daysAvailable(tool.getAvailableDays())
+                .pickUpTimeWeekend(tool.getPickUpTimeWeekend())
+                .pickUpTimeWorkDay(tool.getPickUpTimeWorkDay())
+                .files(tool.getImages().stream().map(Image::getImage).collect(Collectors.toList()))
+                .version(tool.getVersion())
+                .build();
+    }
+
+    private ToolDTO mapToolToToolDTO(Tool tool, SimplifiedUserDTO simplifiedUserDTO) {
+        return ToolDTO.builder()
+                .description(tool.getDescription())
+                .toolCategory(tool.getToolCategory().getCategoryName())
+                .geoCordX(tool.getGeoCordX())
+                .geoCordY(tool.getGeoCordY())
+                .name(tool.getName())
+                .price(tool.getPrice())
+                .assistedTransportation(tool.getAssistedTransportation())
+                .images(tool.getImages().stream().map(x -> Base64.getEncoder().encodeToString(x.getImage())).collect(Collectors.toList()))
+                .formattedAddress(tool.getFormattedAddress())
+                .pickUpTimeWorkDay(tool.getPickUpTimeWorkDay())
+                .pickUpTimeWeekend(tool.getPickUpTimeWeekend())
+                .availableDays(tool.getAvailableDays())
+                .simplifiedUserDTO(simplifiedUserDTO)
+                .owner(Objects.equals(tool.getUser().getId(), userService.getLoggedUserId()))
+                .build();
+    }
+
+    private SimplifiedUserDTO getSimplifiedUserDTO(Long userId) {
+        SimplifiedUserDTO simplifiedUserDTO = userReviewService.getUserAverage(userId);
+        simplifiedUserDTO.setFullName(userService.getUserFullName(simplifiedUserDTO.getUserId()));
+        return simplifiedUserDTO;
     }
 }

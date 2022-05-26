@@ -18,7 +18,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -28,8 +30,8 @@ public class ImageServiceImpl {
     ImageRepository imageRepository;
 
     @Transactional
-    public List<Image> saveAllImages(Tool tool, List<MultipartFile> images) {
-        List<Image> imageList = new ArrayList<>();
+    public Set<Image> saveAllImages(Tool tool, List<MultipartFile> images) {
+        Set<Image> imageList = new HashSet<>();
         List<byte[]> imageContentList = new ArrayList<>();
         for (MultipartFile multipartFile : images) {
             byte[] bytes = new byte[0];
@@ -64,5 +66,9 @@ public class ImageServiceImpl {
         } catch (IOException | IllegalArgumentException e) {
             return image;
         }
+    }
+
+    public void deleteOldImagesByIds(List<Long> ids) {
+        imageRepository.deleteAllById(ids);
     }
 }

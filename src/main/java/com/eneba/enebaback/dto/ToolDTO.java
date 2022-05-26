@@ -47,6 +47,8 @@ public class ToolDTO {
 
     private SimplifiedUserDTO simplifiedUserDTO;
 
+    private boolean owner;
+
     public ToolDTO(Tool tool) {
         this.id = tool.getId();
         this.toolCategory = tool.getToolCategory().getCategoryName();

@@ -7,6 +7,7 @@ import com.eneba.enebaback.entities.User;
 import com.eneba.enebaback.logging.Logging;
 import com.eneba.enebaback.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -14,6 +15,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
@@ -37,6 +39,9 @@ public class UserServiceImpl implements UserDetailsService {
 
     @Logging("Registered user")
     public User RegisterUser(UserRegisterDTO userRegisterDTO) {
+        if (userRepository.existsByEmail(userRegisterDTO.getEmail())) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "User with this email already exists!");
+        }
         User user = new User();
         user.setEmail(userRegisterDTO.getEmail());
         user.setPassword(bCryptPasswordEncoder.encode(userRegisterDTO.getPassword()));

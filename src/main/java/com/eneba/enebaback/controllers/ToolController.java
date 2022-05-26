@@ -35,6 +35,11 @@ public class ToolController {
         return toolService.registerTool(toolRegisterDTO, files);
     }
 
+    @PutMapping("/{id}")
+    public ToolDTO editTool(@RequestPart("data") ToolRegisterDTO toolRegisterDTO, @RequestPart(value = "files", required = false) List<MultipartFile> files,  @PathVariable("id") Long id) {
+        return toolService.editTool(toolRegisterDTO, files, id);
+    }
+
     @GetMapping("/")
     public List<ToolDTO> getAllTools() {
         return toolService.getAllTools();
@@ -96,5 +101,10 @@ public class ToolController {
     @GetMapping("/tool-unavailable-timeslots/{id}")
     public List<ToolUnavailableTimeslotDTO> getToolUnavailableTimeslots(@PathVariable Long id) {
         return toolService.getToolUnavailableTimeslots(id);
+    }
+
+    @GetMapping("/get-edit/{id}")
+    public ToolRegisterDTO getToolForEditing(@PathVariable Long id) {
+        return toolService.getToolForEditing(id);
     }
 }
