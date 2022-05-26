@@ -4,6 +4,7 @@ import com.eneba.enebaback.EnebaBackApplication;
 import com.eneba.enebaback.dto.CustomUser;
 import com.eneba.enebaback.dto.UserRegisterDTO;
 import com.eneba.enebaback.entities.User;
+import com.eneba.enebaback.logging.Logging;
 import com.eneba.enebaback.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContext;
@@ -34,6 +35,7 @@ public class UserServiceImpl implements UserDetailsService {
         };
     }
 
+    @Logging("Registered user")
     public User RegisterUser(UserRegisterDTO userRegisterDTO) {
         User user = new User();
         user.setEmail(userRegisterDTO.getEmail());
@@ -67,6 +69,7 @@ public class UserServiceImpl implements UserDetailsService {
     }
 
     @Transactional
+    @Logging("Updated password")
     public String updatePassword(String newPassword) {
         User user = getLoggedUserEntity();
         if (user == null) {
@@ -79,6 +82,7 @@ public class UserServiceImpl implements UserDetailsService {
     }
 
     @Transactional
+    @Logging("Updated phone number")
     public String updatePhoneNumber(String newPhoneNumber) {
         User user = getLoggedUserEntity();
         if (user == null) {
